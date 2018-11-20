@@ -1,0 +1,28 @@
+.App-header {
+  background-color: #282c34;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 60px;
+  font-size: 18px;
+  color: white;
+}
+
+a {
+  transition: all 0.3s ease-out;
+}
+
+nav {
+  color: #61dafb;
+
+  a {
+    margin: 0 10px;
+    color: inherit;
+    text-decoration: none;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+}
