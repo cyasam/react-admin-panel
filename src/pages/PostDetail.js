@@ -1,20 +1,24 @@
 import React, { Component } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
 import { getAuthToken } from '../helpers';
 
-class Home extends Component {
+class PostDetail extends Component {
   state = {
     loading: false,
-    posts: []
+    post: null
   };
   componentDidMount() {
     this.setState({ loading: true });
 
     const token = getAuthToken();
+    const {
+      match: {
+        params: { id }
+      }
+    } = this.props;
 
     axios
-      .get("http://localhost:5000/api/posts", {
+      .get(`http://localhost:5000/api/posts/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       })
       .then(response => {
@@ -23,7 +27,7 @@ class Home extends Component {
         const { data } = response;
 
         if (data) {
-          this.setState({ posts: data });
+          this.setState({ post: data });
         }
       })
       .catch(error => {
@@ -33,21 +37,19 @@ class Home extends Component {
   }
 
   render() {
-    const { posts } = this.state;
+    const { post } = this.state;
+
+    if (!post){
+      return null
+    }
 
     return (
       <div>
         <h1>Home Page</h1>
-        <ul>
-          {posts.map(post => (
-            <li key={post.id}>
-              <Link to={`/post/${post.id}`}>{post.title}</Link>
-            </li>
-          ))}
-        </ul>
+        <h2>{post.title}</h2>
       </div>
     );
   }
 }
 
-export default Home;
+export default PostDetail;

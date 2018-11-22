@@ -1,11 +1,18 @@
 import React, { Component } from "react";
-import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect
+} from "react-router-dom";
 import "./App.scss";
 
-import Header from './components/Header';
+import Header from "./components/Header";
 
-import Home from './pages/Home';
-import Login from './pages/Login';
+import Protected from "./components/Protected";
+import Home from "./pages/Home";
+import PostDetail from "./pages/PostDetail";
+import Login from "./pages/Login";
 
 class App extends Component {
   render() {
@@ -15,7 +22,8 @@ class App extends Component {
           <Header />
           <div className="container">
             <Switch>
-              <Route exact path="/" component={Home} />
+              <Route exact path="/" component={Protected(Home)} />
+              <Route exact path="/post/:id" component={Protected(PostDetail)} />
               <Route path="/login" component={Login} />
               <Redirect to="/" />
             </Switch>

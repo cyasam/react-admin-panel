@@ -13,8 +13,11 @@ const createToken = () => {
   const payload = {
     sub: process.env.USERID
   };
+  
+  const expiresIn = process.env.AUTH_EXPIRES_IN;
+
   const token = jwt.sign(payload, process.env.SECRET_KEY, {
-    expiresIn: 60
+    expiresIn
   });
 
   return token;

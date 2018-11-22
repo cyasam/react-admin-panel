@@ -3,6 +3,7 @@ import axios from "axios";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
+import { setAuthToken } from "../helpers";
 
 class Login extends Component {
   state = {
@@ -29,6 +30,7 @@ class Login extends Component {
 
     const { form } = this.state;
     this.setState({ loading: true });
+
     axios
       .post("http://localhost:5000/auth/login", form)
       .then(response => {
@@ -39,7 +41,7 @@ class Login extends Component {
 
         if (success && isAuth) {
           const { token } = response.data;
-          localStorage.setItem("app-token", token);
+          setAuthToken(token);
           history.push("/");
         }
       })
@@ -62,6 +64,7 @@ class Login extends Component {
                 label="Username"
                 onChange={this.onInputChange("username")}
                 margin="normal"
+                style={{ width: "100%" }}
               />
             </div>
             <div className="row">
@@ -71,6 +74,7 @@ class Login extends Component {
                 type="password"
                 onChange={this.onInputChange("password")}
                 margin="normal"
+                style={{ width: "100%" }}
               />
             </div>
             <div className="row">
