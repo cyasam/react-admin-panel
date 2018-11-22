@@ -1,20 +1,21 @@
-const express = require("express");
-const bodyParser = require("body-parser");
-const cors = require("cors");
-const morgan = require("morgan");
-const apiRoute = require("./routes/api");
+require("dotenv").config();
+const path = require("path");
+const jsonServer = require("json-server");
+const server = jsonServer.create();
+const router = jsonServer.router(path.join(__dirname, "db.json"));
+const middlewares = jsonServer.defaults();
+
+const apiRoutes = require("./routes/api");
+const authRoutes = require("./routes/auth");
 
 const port = process.env.PORT || 5000;
-const app = express();
-const router = express.Router();
 
-app.use(cors());
-app.use(bodyParser.json());
+server.use(jsonServer.bodyParser);
+server.use(middlewares);
 
-if(process.env.NODE_ENV === "development"){
-  app.use(morgan("combined"));
-}
+authRoutes(server);
+apiRoutes(server, router);
 
-app.use("/api", apiRoute(router));
-
-app.listen(port, () => console.log(`Listening on port ${port}`));
+server.listen(port, () => {
+  console.log("JSON Server is running");
+});

@@ -5,12 +5,7 @@
   "dependencies": {
     "@material-ui/core": "^3.5.1",
     "axios": "^0.18.0",
-    "body-parser": "^1.18.3",
-    "compression": "^1.7.3",
     "cors": "^2.8.5",
-    "express": "^4.16.4",
-    "helmet": "^3.15.0",
-    "mongoose": "^5.3.12",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
     "react-router-dom": "^4.3.1",
@@ -19,6 +14,7 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development concurrently \"yarn server\" \"yarn start\"",
     "server": "nodemon server/index.js",
+    "server:dev": "nodemon inspect server/index.js",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -34,6 +30,8 @@
     "concurrently": "^4.1.0",
     "cross-env": "^5.2.0",
     "dotenv": "^6.1.0",
+    "json-server": "^0.14.0",
+    "jsonwebtoken": "^8.4.0",
     "morgan": "^1.9.1",
     "node-sass": "^4.10.0",
     "nodemon": "^1.18.6"

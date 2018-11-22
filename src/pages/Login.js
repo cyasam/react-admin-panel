@@ -1,27 +1,56 @@
 import React, { Component } from "react";
+import axios from "axios";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 
 class Login extends Component {
   state = {
-    username: "",
-    password: ""
+    loading: false,
+    form: {
+      username: "",
+      password: ""
+    }
   };
 
   onInputChange = name => event => {
     const { value } = event.target;
+    const { form } = this.state;
     this.setState({
-      [name]: value
+      form: {
+        ...form,
+        [name]: value
+      }
     });
   };
 
   onSubmit = event => {
     event.preventDefault();
+
+    const { form } = this.state;
+    this.setState({ loading: true });
+    axios
+      .post("http://localhost:5000/auth/login", form)
+      .then(response => {
+        this.setState({ loading: false });
+
+        const { success, isAuth } = response.data;
+        const { history } = this.props;
+
+        if (success && isAuth) {
+          const { token } = response.data;
+          localStorage.setItem("app-token", token);
+          history.push("/");
+        }
+      })
+      .catch(error => {
+        this.setState({ loading: false });
+        throw error;
+      });
   };
 
   render() {
-    const { username, password } = this.state;
+    const { loading } = this.state;
 
     return (
       <Grid container justify="center" alignItems="center">
@@ -31,7 +60,6 @@ class Login extends Component {
               <TextField
                 id="username"
                 label="Username"
-                value={username}
                 onChange={this.onInputChange("username")}
                 margin="normal"
               />
@@ -41,14 +69,13 @@ class Login extends Component {
                 id="password"
                 label="Password"
                 type="password"
-                value={password}
                 onChange={this.onInputChange("password")}
                 margin="normal"
               />
             </div>
             <div className="row">
-              <Button type="submit" variant="contained">
-                Login
+              <Button type="submit" disabled={loading} variant="contained">
+                {!loading ? "Login" : "Loading..."}
               </Button>
             </div>
           </form>
