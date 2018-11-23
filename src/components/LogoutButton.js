@@ -7,6 +7,8 @@ import Button from '@material-ui/core/Button';
 class LogoutButton extends Component {
   clickLogout = () => {
     removeAuthToken();
+    
+    this.props.setIsAuth(false);
 
     const { history } = this.props;
     history.push("/login");

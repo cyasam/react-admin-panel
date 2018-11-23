@@ -1,7 +1,10 @@
 const jwt = require("jsonwebtoken");
 
 const isAuthenticated = req => {
-  const { username, password } = req.body;
+  const {
+    username,
+    password
+  } = req.body;
   if (username === "test" && password === "1234") {
     return true;
   }
@@ -13,7 +16,7 @@ const createToken = () => {
   const payload = {
     sub: process.env.USERID
   };
-  
+
   const expiresIn = process.env.AUTH_EXPIRES_IN;
 
   const token = jwt.sign(payload, process.env.SECRET_KEY, {
@@ -29,10 +32,18 @@ module.exports = server => {
     if (isAuthenticated(req)) {
       const token = createToken();
 
-      res.send({ success: true, isAuth: true, token });
-      res.end();
+      res.send({
+        success: true,
+        isAuth: true,
+        token,
+        message: 'Login is successful.'
+      });
     } else {
-      res.sendStatus(401);
+      res.send(401, {
+        message: 'Wrong username or password.'
+      });
     }
+
+    res.end();
   });
 };

@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { withRouter } from 'react-router-dom';
 import axios from "axios";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
@@ -11,7 +12,8 @@ class Login extends Component {
     form: {
       username: "",
       password: ""
-    }
+    },
+    message: null
   };
 
   onInputChange = name => event => {
@@ -37,27 +39,41 @@ class Login extends Component {
         this.setState({ loading: false });
 
         const { success, isAuth } = response.data;
-        const { history } = this.props;
 
         if (success && isAuth) {
-          const { token } = response.data;
-          setAuthToken(token);
-          history.push("/");
+          const { history, setIsAuth } = this.props;
+          const { token, message } = response.data;
+          this.setState({ message });
+
+          setTimeout(() => {
+            setAuthToken(token);
+            setIsAuth(isAuth)
+            history.push("/")
+          }, 1000);
+        } else {
+          const { message } = response.data;
+          this.setState({ message });
         }
       })
       .catch(error => {
+        if (error.response) {
+          const { message } = error.response.data;
+          this.setState({ message });
+        }
+
         this.setState({ loading: false });
         throw error;
       });
   };
 
   render() {
-    const { loading } = this.state;
+    const { loading, message } = this.state;
 
     return (
       <Grid container justify="center" alignItems="center">
         <Grid item xs={4}>
           <form onSubmit={this.onSubmit} noValidate autoComplete="off">
+            <p>{message}</p>
             <div className="row">
               <TextField
                 id="username"
@@ -89,4 +105,4 @@ class Login extends Component {
   }
 }
 
-export default Login;
+export default withRouter(Login);
