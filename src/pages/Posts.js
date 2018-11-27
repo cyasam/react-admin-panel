@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { connect } from "react-redux";
+
+import { setLoading } from "../actions";
 import { getAuthToken } from '../helpers';
 
 class Posts extends Component {
@@ -9,6 +12,7 @@ class Posts extends Component {
     posts: []
   };
   componentDidMount() {
+    this.props.setLoading(true);
     this.setState({ loading: true });
 
     const token = getAuthToken();
@@ -18,6 +22,7 @@ class Posts extends Component {
         headers: { Authorization: `Bearer ${token}` }
       })
       .then(response => {
+        this.props.setLoading(false);
         this.setState({ loading: false });
 
         const { data } = response;
@@ -27,6 +32,7 @@ class Posts extends Component {
         }
       })
       .catch(error => {
+        this.props.setLoading(false);
         this.setState({ loading: false });
         throw error;
       });
@@ -55,4 +61,4 @@ class Posts extends Component {
   }
 }
 
-export default Posts;
+export default connect(null, { setLoading })(Posts);

@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from "react";
 import { Link } from "react-router-dom";
+import { connect } from "react-redux";
 import { verifyAuth } from "../helpers";
 
 import LogoutButton from "./LogoutButton";
@@ -28,7 +29,7 @@ class Header extends Component {
 
   render(){
     const isAuth = verifyAuth();
-    const { classes } = this.props;
+    const { classes, loading } = this.props;
 
     return (
       <Fragment>
@@ -44,11 +45,15 @@ class Header extends Component {
               <LogoutButton color="inherit" setIsAuth={this.setIsAuth}>Logout</LogoutButton>
             )}
           </Toolbar>
-          <LinearProgress color="secondary" />
+          { loading && <LinearProgress color="secondary" /> }
         </AppBar>
       </Fragment>
     );
   }
 };
 
-export default withStyles(styles)(Header);
+const mapStateToProps = state =>  ({
+  loading: state.loading
+})
+
+export default connect(mapStateToProps)(withStyles(styles)(Header));

@@ -1,6 +1,13 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
+
+import { setLoading } from "../actions";
 
 class Home extends Component {
+  componentDidMount() {
+    this.props.setLoading(false);
+  }
+
   render() {
     return (
       <div>
@@ -10,4 +17,4 @@ class Home extends Component {
   }
 }
 
-export default Home;
+export default connect(null, { setLoading })(Home);

@@ -1,5 +1,8 @@
 import React, { Component } from "react";
 import axios from "axios";
+import { connect } from "react-redux";
+
+import { setLoading } from "../actions";
 import { getAuthToken } from '../helpers';
 
 class PostDetail extends Component {
@@ -8,6 +11,7 @@ class PostDetail extends Component {
     post: null
   };
   componentDidMount() {
+    this.props.setLoading(true);
     this.setState({ loading: true });
 
     const token = getAuthToken();
@@ -22,6 +26,7 @@ class PostDetail extends Component {
         headers: { Authorization: `Bearer ${token}` }
       })
       .then(response => {
+        this.props.setLoading(false);
         this.setState({ loading: false });
 
         const { data } = response;
@@ -31,6 +36,7 @@ class PostDetail extends Component {
         }
       })
       .catch(error => {
+        this.props.setLoading(false);
         this.setState({ loading: false });
         throw error;
       });
@@ -53,4 +59,4 @@ class PostDetail extends Component {
   }
 }
 
-export default PostDetail;
+export default connect(null, { setLoading })(PostDetail);

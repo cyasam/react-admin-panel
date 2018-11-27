@@ -1,6 +1,10 @@
 import React, { Component } from "react";
 import { withRouter } from 'react-router-dom';
 import axios from "axios";
+import { connect } from "react-redux";
+
+import { setLoading } from "../actions";
+
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
@@ -15,6 +19,10 @@ class Login extends Component {
     },
     message: null
   };
+
+  componentDidMount() {
+    this.props.setLoading(false);
+  }
 
   onInputChange = name => event => {
     const { value } = event.target;
@@ -31,11 +39,14 @@ class Login extends Component {
     event.preventDefault();
 
     const { form } = this.state;
+
+    this.props.setLoading(true);
     this.setState({ loading: true });
 
     axios
       .post("http://localhost:5000/auth/login", form)
       .then(response => {
+        this.props.setLoading(false);
         this.setState({ loading: false });
 
         const { success, isAuth } = response.data;
@@ -61,6 +72,7 @@ class Login extends Component {
           this.setState({ message });
         }
 
+        this.props.setLoading(false);
         this.setState({ loading: false });
         throw error;
       });
@@ -105,4 +117,4 @@ class Login extends Component {
   }
 }
 
-export default withRouter(Login);
+export default connect(null, { setLoading })(withRouter(Login));

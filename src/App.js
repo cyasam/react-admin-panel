@@ -6,17 +6,19 @@ import {
   Redirect
 } from "react-router-dom";
 import { withStyles } from '@material-ui/core/styles';
-import "./App.scss";
+
+import { Provider } from "react-redux";
+import store from "./store";
 
 import Header from "./components/Header";
 import Menu from "./components/Menu";
 
 import Protected from "./components/Protected";
-import Home from "./pages/Home";
-import Posts from "./pages/Posts";
-import PostDetail from "./pages/PostDetail";
-import Login from "./pages/Login";
+import { Home, Posts, PostDetail, Login } from "./Routes";
+
 import { verifyAuth } from "./helpers";
+import "./App.scss";
+
 
 const style = theme => ({
   root: {
@@ -58,20 +60,22 @@ class App extends Component {
 
     return (
       <Router>
-        <div className={classes.root}>
-          <Header setIsAuth={this.setIsAuth} />
-          { this.getMenu() }
-          <main className={classes.content}>
-            <div className={classes.toolbar} />
-            <Switch>
-              <Route exact path="/" component={Protected(Home)} />
-              <Route exact path="/posts" component={Protected(Posts)} />
-              <Route exact path="/post/:id" component={Protected(PostDetail)} />
-              <Route path="/login" render={() => <Login setIsAuth={this.setIsAuth} />} />
-              <Redirect to="/" />
-            </Switch>
-          </main>
-        </div>
+        <Provider store={store}>
+          <div className={classes.root}>
+            <Header setIsAuth={this.setIsAuth} />
+            { this.getMenu() }
+            <main className={classes.content}>
+              <div className={classes.toolbar} />
+              <Switch>
+                <Route exact path="/" component={Protected(Home)} />
+                <Route exact path="/posts" component={Protected(Posts)} />
+                <Route exact path="/post/:id" component={Protected(PostDetail)} />
+                <Route path="/login" render={() => <Login setIsAuth={this.setIsAuth} />} />
+                <Redirect to="/" />
+              </Switch>
+            </main>
+          </div>
+        </Provider>
       </Router>
     );
   }
