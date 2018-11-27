@@ -1,5 +1,8 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
+import { connect } from "react-redux";
+
+import { setAuth } from "../actions";
 import { removeAuthToken } from "../helpers";
 
 import Button from '@material-ui/core/Button';
@@ -8,7 +11,7 @@ class LogoutButton extends Component {
   clickLogout = () => {
     removeAuthToken();
     
-    this.props.setIsAuth(false);
+    this.props.setAuth(false);
 
     const { history } = this.props;
     history.push("/login");
@@ -23,4 +26,4 @@ class LogoutButton extends Component {
   }
 }
 
-export default withRouter(LogoutButton);
+export default connect(null, { setAuth })(withRouter(LogoutButton));

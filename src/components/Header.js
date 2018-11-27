@@ -1,7 +1,6 @@
 import React, { Component, Fragment } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { verifyAuth } from "../helpers";
 
 import LogoutButton from "./LogoutButton";
 
@@ -23,13 +22,8 @@ const styles = theme => ({
 });
 
 class Header extends Component {
-  setIsAuth = (isAuth) => {
-    this.props.setIsAuth(isAuth);
-  }
-
   render(){
-    const isAuth = verifyAuth();
-    const { classes, loading } = this.props;
+    const { isAuth, classes, loading } = this.props;
 
     return (
       <Fragment>
@@ -42,7 +36,7 @@ class Header extends Component {
             {!isAuth ? (
               <Button color="inherit" component={Link} to="/login">Login</Button>
             ) : (
-              <LogoutButton color="inherit" setIsAuth={this.setIsAuth}>Logout</LogoutButton>
+              <LogoutButton color="inherit">Logout</LogoutButton>
             )}
           </Toolbar>
           { loading && <LinearProgress color="secondary" /> }
@@ -53,6 +47,7 @@ class Header extends Component {
 };
 
 const mapStateToProps = state =>  ({
+  isAuth: state.isAuth,
   loading: state.loading
 })
 

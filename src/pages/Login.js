@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom';
 import axios from "axios";
 import { connect } from "react-redux";
 
-import { setLoading } from "../actions";
+import { setAuth, setLoading } from "../actions";
 
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
@@ -52,13 +52,13 @@ class Login extends Component {
         const { success, isAuth } = response.data;
 
         if (success && isAuth) {
-          const { history, setIsAuth } = this.props;
+          const { history, setAuth } = this.props;
           const { token, message } = response.data;
           this.setState({ message });
 
           setTimeout(() => {
             setAuthToken(token);
-            setIsAuth(isAuth)
+            setAuth(isAuth)
             history.push("/")
           }, 1000);
         } else {
@@ -117,4 +117,4 @@ class Login extends Component {
   }
 }
 
-export default connect(null, { setLoading })(withRouter(Login));
+export default connect(null, { setAuth, setLoading })(withRouter(Login));

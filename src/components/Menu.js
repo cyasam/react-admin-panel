@@ -1,5 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { connect } from "react-redux";
+
 import { withStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
@@ -20,7 +22,11 @@ const styles = theme => ({
 });
 
 const Menu = (props) => {
-  const { classes } = props;
+  const { isAuth, classes } = props;
+
+    if(!isAuth) {
+      return null;
+    }
 
   return (
     <Drawer
@@ -43,4 +49,9 @@ const Menu = (props) => {
   )
 }
 
-export default withStyles(styles)(Menu);
+const mapStateToProps = state =>  ({
+  isAuth: state.isAuth,
+  loading: state.loading
+})
+
+export default connect(mapStateToProps)(withStyles(styles)(Menu));

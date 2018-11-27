@@ -10,6 +10,7 @@ class PostDetail extends Component {
     loading: true,
     post: null
   };
+  
   componentDidMount() {
     this.props.setLoading(true);
     this.setState({ loading: true });
