@@ -31,6 +31,7 @@ api.interceptors.response.use(
       removeAuthToken();
 
       const err = {
+        open: true,
         message: error.response.data.message
       }
       setErrorStatesToStore(err)

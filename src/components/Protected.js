@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { verifyAuth, removeAuthToken } from "../helpers";
+import { checkToken, removeAuthToken } from "../helpers";
 import { connect } from "react-redux";
 import { setErrorStatesToStore } from "../helpers";
 
@@ -16,10 +16,11 @@ export default ProtectedComponent => {
     checkAuth() {
       const { isAuth } = this.props;
 
-      if (!isAuth || !verifyAuth()) {
+      if (!isAuth || !checkToken()) {
         removeAuthToken();
 
         const error = {
+          open: (!isAuth || !checkToken()),
           message: "Your authentication is expired. Please login again."
         }
         setErrorStatesToStore(error);

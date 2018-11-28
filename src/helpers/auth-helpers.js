@@ -18,7 +18,7 @@ export const removeAuthToken = () => {
   localStorage.removeItem(tokenName);
 };
 
-export const verifyAuth = () => {
+export const checkToken = () => {
   const token = getAuthToken();
 
   if (token) {

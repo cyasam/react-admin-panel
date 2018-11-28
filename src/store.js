@@ -2,7 +2,7 @@ import { createStore, applyMiddleware } from "redux";
 import thunk from "redux-thunk";
 import { setAuthDispatch } from "./actions";
 import rootReducer from "./reducers"
-import { verifyAuth } from "./helpers";
+import { checkToken } from "./helpers";
 
 const middlewares = [thunk];
 
@@ -17,7 +17,7 @@ const store = createStore(
   applyMiddleware(...middlewares)
 );
 
-if(verifyAuth()){
+if(checkToken()){
   store.dispatch(setAuthDispatch(true));
 }
 

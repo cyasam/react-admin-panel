@@ -42,6 +42,8 @@ class Login extends Component {
     const { form } = this.state;
     const { setLoading, closeSnackbar, loadSnackbar } = this.props;
 
+    const autoHideDuration = 2000;
+
     setLoading(true);
     this.setState({ loading: true });
     closeSnackbar();
@@ -71,7 +73,8 @@ class Login extends Component {
         const snackbarProps = {
           open: true,
           message,
-          variant
+          variant,
+          autoHideDuration
         };
 
         loadSnackbar(snackbarProps);
@@ -83,7 +86,8 @@ class Login extends Component {
           loadSnackbar({
             open: true,
             variant: "error",
-            message: message
+            message: message,
+            autoHideDuration
           });
         }
 
