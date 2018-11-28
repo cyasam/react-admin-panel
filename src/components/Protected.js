@@ -19,9 +19,12 @@ export default ProtectedComponent => {
       if (!isAuth || !checkToken()) {
         removeAuthToken();
 
-        const error = {
-          open: (!isAuth || !checkToken()),
-          message: "Your authentication is expired. Please login again."
+        let error = {};
+        if(isAuth && !checkToken()){
+          error = {
+            open: true,
+            message: "Your authentication is expired. Please login again."
+          }
         }
         setErrorStatesToStore(error);
 

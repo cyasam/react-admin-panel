@@ -13,8 +13,6 @@ import { setAuthToken } from "../helpers";
 
 class Login extends Component {
   state = {
-    loading: false,
-    error: null,
     form: {
       username: "",
       password: ""
@@ -45,14 +43,12 @@ class Login extends Component {
     const autoHideDuration = 2000;
 
     setLoading(true);
-    this.setState({ loading: true });
     closeSnackbar();
 
     authReq
       .post("/login", form)
       .then(response => {
         this.props.setLoading(false);
-        this.setState({ loading: false, error: null });
 
         const { success, isAuth, message } = response.data;
 
@@ -92,13 +88,12 @@ class Login extends Component {
         }
 
         this.props.setLoading(false);
-        this.setState({ loading: false, error });
         throw error;
       });
   };
 
   render() {
-    const { loading } = this.state;
+    const { loading } = this.props;
 
     return (
       <Grid container justify="center" alignItems="center">
