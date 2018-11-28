@@ -1,20 +1,21 @@
 import React, { Component } from "react";
-import { verifyAuth, removeAuthToken } from "../helpers";
+import { removeAuthToken } from "../helpers";
+import { connect } from "react-redux";
 
 export default ProtectedComponent => {
-  return class Protected extends Component {
-    state = {
-      Component: null
-    };
+  class Protected extends Component {
     componentDidMount() {
       this.checkAuth();
     }
+    
+    componentDidUpdate() {
+        this.checkAuth();
+    }
 
     checkAuth() {
-      if (verifyAuth()) {
-        this.setState({ Component: ProtectedComponent });
-      } else {
-        this.setState({ Component: null });
+      const { isAuth } = this.props;
+
+      if (!isAuth) {
         removeAuthToken();
 
         const { history } = this.props;
@@ -23,13 +24,19 @@ export default ProtectedComponent => {
     }
 
     render() {
-      const { Component } = this.state;
+      const { isAuth } = this.props;
 
-      if (!Component) {
+      if (!isAuth) {
         return null;
       }
 
-      return <Component {...this.props} />;
+      return <ProtectedComponent {...this.props} />;
     }
   };
+
+  const mapStateToProps = state => ({
+    isAuth: state.isAuth
+  });
+
+  return connect(mapStateToProps)(Protected);
 };

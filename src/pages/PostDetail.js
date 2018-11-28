@@ -1,19 +1,30 @@
 import React, { Component } from "react";
-import axios from "axios";
 import { connect } from "react-redux";
+import { apiReq } from "../helpers";
+
+import { withStyles } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
+import Paper from "@material-ui/core/Paper";
 
 import { setLoading } from "../actions";
-import { getAuthToken } from '../helpers';
+import { getAuthToken } from "../helpers";
 
+const styles = theme => ({
+  root: {
+    width: "100%",
+    padding: theme.spacing.unit * 3
+  },
+  postTitle: {
+    textTransform: "capitalize"
+  }
+});
 class PostDetail extends Component {
   state = {
-    loading: true,
     post: null
   };
-  
+
   componentDidMount() {
     this.props.setLoading(true);
-    this.setState({ loading: true });
 
     const token = getAuthToken();
     const {
@@ -22,13 +33,12 @@ class PostDetail extends Component {
       }
     } = this.props;
 
-    axios
-      .get(`http://localhost:5000/api/posts/${id}`, {
+    apiReq
+      .get(`/posts/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       })
       .then(response => {
         this.props.setLoading(false);
-        this.setState({ loading: false });
 
         const { data } = response;
 
@@ -38,26 +48,35 @@ class PostDetail extends Component {
       })
       .catch(error => {
         this.props.setLoading(false);
-        this.setState({ loading: false });
         throw error;
       });
   }
 
   render() {
-    const { loading, post } = this.state;
+    const { post } = this.state;
+    const { classes } = this.props;
 
-    if(loading){
-      return <p>Loading...</p>;
-    } else if(!post){
+    if (!post) {
       return null;
     }
 
     return (
-      <div>
-        <h2>{post.title}</h2>
-      </div>
+      <Paper className={classes.root}>
+        <Typography
+          component="h2"
+          variant="h4"
+          className={classes.postTitle}
+          gutterBottom
+        >
+          {post.title}
+        </Typography>
+        <div>{post.body}</div>
+      </Paper>
     );
   }
 }
 
-export default connect(null, { setLoading })(PostDetail);
+export default connect(
+  null,
+  { setLoading }
+)(withStyles(styles)(PostDetail));
