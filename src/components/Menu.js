@@ -44,6 +44,9 @@ const Menu = (props) => {
         <ListItem to="/posts" component={Link} button key="Posts">
           <ListItemText primary="Posts" />
         </ListItem>
+        <ListItem to="/users" component={Link} button key="Users">
+          <ListItemText primary="Users" />
+        </ListItem>
       </List>
     </Drawer>
   )

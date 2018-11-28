@@ -16,6 +16,16 @@ export const PostDetail = Loadable({
   loading: Loading
 })
 
+export const Users = Loadable({
+  loader: () => import('./pages/Users'),
+  loading: Loading
+})
+
+export const UsersDetail = Loadable({
+  loader: () => import('./pages/UsersDetail'),
+  loading: Loading
+})
+
 export const Login = Loadable({
   loader: () => import('./pages/Login'),
   loading: Loading

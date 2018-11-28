@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { checkToken, removeAuthToken } from "../helpers";
 import { connect } from "react-redux";
-import { setErrorStatesToStore } from "../helpers";
+import { setErrorStateToStore } from "../helpers";
 
 export default ProtectedComponent => {
   class Protected extends Component {
@@ -26,7 +26,7 @@ export default ProtectedComponent => {
             message: "Your authentication is expired. Please login again."
           }
         }
-        setErrorStatesToStore(error);
+        setErrorStateToStore(error);
 
         const { history } = this.props;
         history.push("/login");

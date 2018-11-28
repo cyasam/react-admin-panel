@@ -21,51 +21,51 @@ const styles = theme => ({
   root: {
     width: "100%"
   },
-  postTitle: {
+  name: {
     color: theme.palette.text.primary,
     textTransform: "capitalize",
     textDecoration: "none"
   }
 });
 
-class Posts extends Component {
+class Users extends Component {
   state = {
-    posts: []
+    users: []
   };
   componentDidMount() {
     this.props.setLoading(true);
 
     apiReq
-      .get("/posts")
+      .get("/users")
       .then(response => {
         const { data } = response;
 
         if (data) {
-          this.setState({ posts: data });
+          this.setState({ users: data });
         }
       });
   }
 
   render() {
-    const { posts } = this.state;
+    const { users } = this.state;
     const { loading, classes } = this.props;
 
-    if (loading || !posts) {
+    if (loading || !users) {
       return null;
     }
 
     return (
       <Fragment>
         <Typography component="h2" variant="h3" gutterBottom>
-          Posts
+          Users
         </Typography>
         <Paper className={classes.root}>
           <List>
-            {posts.map(post => (
-              <ListItem key={post.id}>
+            {users.map(user => (
+              <ListItem key={user.id}>
                 <ListItemText>
-                  <Link className={classes.postTitle} to={`/post/${post.id}`}>
-                    {post.title}
+                  <Link className={classes.name} to={`/user/${user.id}`}>
+                    {user.name}
                   </Link>
                 </ListItemText>
 
@@ -94,4 +94,4 @@ const mapStateToProps = state => ({
 export default connect(
   mapStateToProps,
   { setLoading }
-)(withStyles(styles)(Posts));
+)(withStyles(styles)(Users));

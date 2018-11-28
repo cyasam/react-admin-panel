@@ -15,7 +15,7 @@ import Header from "./components/Header";
 import Menu from "./components/Menu";
 
 import Protected from "./components/Protected";
-import { Home, Posts, PostDetail, Login } from "./Routes";
+import { Home, Posts, PostDetail, Login, Users, UsersDetail } from "./Routes";
 
 import "./App.scss";
 
@@ -45,8 +45,10 @@ class App extends Component {
               <div className={classes.toolbar} />
               <Switch>
                 <Route exact path="/" component={Protected(Home)} />
-                <Route exact path="/posts" component={Protected(Posts)} />
-                <Route exact path="/post/:id" component={Protected(PostDetail)} />
+                <Route path="/posts" component={Protected(Posts)} />
+                <Route path="/post/:id" component={Protected(PostDetail)} />
+                <Route path="/users" component={Protected(Users)} />
+                <Route path="/user/:id" component={Protected(UsersDetail)} />
                 <Route path="/login" component={Login} />
                 <Redirect to="/" />
               </Switch>

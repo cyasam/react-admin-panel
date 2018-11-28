@@ -48,8 +48,6 @@ class Login extends Component {
     authReq
       .post("/login", form)
       .then(response => {
-        this.props.setLoading(false);
-
         const { success, isAuth, message } = response.data;
 
         let variant;
@@ -86,9 +84,6 @@ class Login extends Component {
             autoHideDuration
           });
         }
-
-        this.props.setLoading(false);
-        throw error;
       });
   };
 

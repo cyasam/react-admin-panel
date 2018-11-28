@@ -1,7 +1,7 @@
 import store from "../store";
 import { setAuthDispatch, loadSnackbarDispatch } from "../actions";
 
-export const setErrorStatesToStore = (error) => {
+export const setErrorStateToStore = (error) => {
   store.dispatch(setAuthDispatch(false));
 
   if(error.open){

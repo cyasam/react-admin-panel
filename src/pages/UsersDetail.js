@@ -13,13 +13,13 @@ const styles = theme => ({
     width: "100%",
     padding: theme.spacing.unit * 3
   },
-  postTitle: {
+  name: {
     textTransform: "capitalize"
   }
 });
-class PostDetail extends Component {
+class UsersDetail extends Component {
   state = {
-    post: null
+    user: null
   };
 
   componentDidMount() {
@@ -32,21 +32,21 @@ class PostDetail extends Component {
     } = this.props;
 
     apiReq
-      .get(`/posts/${id}`)
+      .get(`/users/${id}`)
       .then(response => {
         const { data } = response;
 
         if (data) {
-          this.setState({ post: data });
+          this.setState({ user: data });
         }
       });
   }
 
   render() {
-    const { post } = this.state;
+    const { user } = this.state;
     const { classes } = this.props;
 
-    if (!post) {
+    if (!user) {
       return null;
     }
 
@@ -55,12 +55,12 @@ class PostDetail extends Component {
         <Typography
           component="h2"
           variant="h4"
-          className={classes.postTitle}
+          className={classes.name}
           gutterBottom
         >
-          {post.title}
+          {user.name}
         </Typography>
-        <div>{post.body}</div>
+        <div>{user.email}</div>
       </Paper>
     );
   }
@@ -69,4 +69,4 @@ class PostDetail extends Component {
 export default connect(
   null,
   { setLoading }
-)(withStyles(styles)(PostDetail));
+)(withStyles(styles)(UsersDetail));

@@ -2,7 +2,8 @@ import axios from "axios";
 import {
   getAuthToken,
   removeAuthToken,
-  setErrorStatesToStore
+  setErrorStateToStore,
+  setLoadingStateToStore
 } from "../helpers";
 
 const api = axios.create({
@@ -24,6 +25,7 @@ api.interceptors.request.use(
 
 api.interceptors.response.use(
   response => {
+    setLoadingStateToStore(false);
     return response;
   },
   error => {
@@ -34,8 +36,10 @@ api.interceptors.response.use(
         open: true,
         message: error.response.data.message
       }
-      setErrorStatesToStore(err)
+      setErrorStateToStore(err)
     }
+    
+    setLoadingStateToStore(false);
     return Promise.reject(error);
   }
 );
