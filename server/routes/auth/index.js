@@ -39,7 +39,8 @@ module.exports = server => {
         message: 'Login is successful.'
       });
     } else {
-      res.send(401, {
+      res.status(401).json({
+        success: false,
         message: 'Wrong username or password.'
       });
     }
