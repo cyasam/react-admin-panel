@@ -18,7 +18,7 @@ module.exports = (server, router) => {
   const routeUrl = "/api";
   server.use(routeUrl, (req, res, next) => {
     const status = 401;
-    const message = "Bad authorization header";
+    const message = "Your authentication is expired. Please login again.";
 
     if (
       !req.headers.authorization ||

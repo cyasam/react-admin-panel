@@ -1,34 +1,39 @@
 import axios from "axios";
-import { getAuthToken, removeAuthToken } from "../helpers";
+import {
+  getAuthToken,
+  removeAuthToken,
+  setErrorStatesToStore
+} from "../helpers";
 
 const api = axios.create({
   baseURL: process.env.REACT_APP_APIURL
 });
 
 api.interceptors.request.use(
-  function(request) {
+  request => {
     const token = getAuthToken();
-    if(token){
+    if (token) {
       request.headers.Authorization = `Bearer ${token}`;
     }
     return request;
   },
-  function(error) {
+  error => {
     return Promise.reject(error);
   }
 );
 
 api.interceptors.response.use(
-  function(response) {
+  response => {
     return response;
   },
-  function(error) {
+  error => {
     if (error.response && (error.response.status > 400)) {
       removeAuthToken();
-      /* store.dispatch({
-        type: "APP_AUTH",
-        payload: false
-      }); */
+
+      const err = {
+        message: error.response.data.message
+      }
+      setErrorStatesToStore(err)
     }
     return Promise.reject(error);
   }

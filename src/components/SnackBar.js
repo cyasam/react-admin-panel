@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 
 import { withStyles } from "@material-ui/core/styles";
 import Snackbar from "@material-ui/core/Snackbar";
@@ -9,6 +10,8 @@ import CloseIcon from "@material-ui/icons/Close";
 
 import green from "@material-ui/core/colors/green";
 import amber from "@material-ui/core/colors/amber";
+
+import { closeSnackbar } from "../actions";
 
 const styles = theme => ({
   success: {
@@ -42,18 +45,19 @@ class CustomSnackbar extends Component {
       return;
     }
 
-    const { closeSnackBar } = this.props;
-    closeSnackBar();
+    this.props.closeSnackbar();
   };
 
   render() {
     const {
       classes,
-      children,
-      anchorOrigin,
-      open,
-      variant,
-      autoHideDuration
+      snackbar: {
+        anchorOrigin,
+        open,
+        variant,
+        autoHideDuration,
+        message
+      }
     } = this.props;
 
     return (
@@ -68,7 +72,7 @@ class CustomSnackbar extends Component {
           className={classes[variant]}
           message={
             <span id="message-id" className={classes.message}>
-              {children}
+              {message}
             </span>
           }
           action={[
@@ -88,8 +92,8 @@ class CustomSnackbar extends Component {
   }
 }
 
-CustomSnackbar.defaultProps = {
-  anchorOrigin: { vertical: "top", horizontal: "center" }
-};
+const mapStateToProps = state => ({
+  snackbar: state.snackbar
+});
 
-export default withStyles(styles)(CustomSnackbar);
+export default connect(mapStateToProps, { closeSnackbar })(withStyles(styles)(CustomSnackbar));

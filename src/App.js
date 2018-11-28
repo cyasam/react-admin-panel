@@ -6,6 +6,7 @@ import {
   Redirect
 } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
+import SnackBar from "./components/SnackBar";
 
 import { Provider } from "react-redux";
 import store from "./store";
@@ -50,6 +51,7 @@ class App extends Component {
                 <Redirect to="/" />
               </Switch>
             </main>
+            <SnackBar />
           </div>
         </Provider>
       </Router>

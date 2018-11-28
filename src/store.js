@@ -1,5 +1,6 @@
 import { createStore, applyMiddleware } from "redux";
 import thunk from "redux-thunk";
+import { setAuthDispatch } from "./actions";
 import rootReducer from "./reducers"
 import { verifyAuth } from "./helpers";
 
@@ -17,10 +18,7 @@ const store = createStore(
 );
 
 if(verifyAuth()){
-  store.dispatch({
-    type: 'APP_AUTH',
-    payload: true
-  });
+  store.dispatch(setAuthDispatch(true));
 }
 
 export default store;

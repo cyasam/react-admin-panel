@@ -3,20 +3,18 @@ import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { authReq } from "../helpers";
 
-import { setAuth, setLoading } from "../actions";
+import { setAuth, setLoading, loadSnackbar } from "../actions";
 
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
+import { closeSnackbar } from "../actions";
 import { setAuthToken } from "../helpers";
-import SnackBar from "../components/SnackBar";
 
 class Login extends Component {
   state = {
     loading: false,
     error: null,
-    message: null,
-    openSnackBar: false,
     form: {
       username: "",
       password: ""
@@ -42,66 +40,57 @@ class Login extends Component {
     event.preventDefault();
 
     const { form } = this.state;
+    const { setLoading, closeSnackbar, loadSnackbar } = this.props;
 
-    this.props.setLoading(true);
-    this.setState({ loading: true, openSnackBar: false });
+    setLoading(true);
+    this.setState({ loading: true });
+    closeSnackbar();
 
     authReq
       .post("/login", form)
       .then(response => {
         this.props.setLoading(false);
-        this.setState({ loading: false, error: null, openSnackBar: true });
+        this.setState({ loading: false, error: null });
 
-        const { success, isAuth } = response.data;
+        const { success, isAuth, message } = response.data;
+
+        let variant;
 
         if (success && isAuth) {
           const { history, setAuth } = this.props;
-          const { token, message } = response.data;
-          this.setState({ message });
+          variant = "success";
 
-          setTimeout(() => {
-            setAuthToken(token);
-            setAuth(isAuth);
-            history.push("/");
-          }, 2000);
+          const { token } = response.data;
+          setAuthToken(token);
+          setAuth(isAuth);
+          history.push("/");
         } else {
-          const { message } = response.data;
-          this.setState({ message });
+          variant = "error";
         }
+
+        const snackbarProps = {
+          open: true,
+          message,
+          variant
+        };
+
+        loadSnackbar(snackbarProps);
       })
       .catch(error => {
         if (error.response) {
           const { message } = error.response.data;
-          this.setState({ message });
+
+          loadSnackbar({
+            open: true,
+            variant: "error",
+            message: message
+          });
         }
 
         this.props.setLoading(false);
-        this.setState({ loading: false, error, openSnackBar: true });
+        this.setState({ loading: false, error });
         throw error;
       });
-  };
-
-  closeSnackBar = () => {
-    this.setState({
-      openSnackBar: false
-    });
-  };
-
-  renderSnackBar = () => {
-    const { error, message, openSnackBar } = this.state;
-
-    const variant = !error ? "success" : "error";
-
-    return (
-      <SnackBar
-        open={openSnackBar}
-        closeSnackBar={this.closeSnackBar}
-        variant={variant}
-        autoHideDuration={5000}
-      >
-        {message}
-      </SnackBar>
-    );
   };
 
   render() {
@@ -110,7 +99,6 @@ class Login extends Component {
     return (
       <Grid container justify="center" alignItems="center">
         <Grid item xs={4}>
-          {this.renderSnackBar()}
           <form onSubmit={this.onSubmit} noValidate autoComplete="off">
             <div className="row">
               <TextField
@@ -145,5 +133,5 @@ class Login extends Component {
 
 export default connect(
   null,
-  { setAuth, setLoading }
+  { setAuth, setLoading, loadSnackbar, closeSnackbar }
 )(withRouter(Login));
