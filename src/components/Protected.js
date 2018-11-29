@@ -1,16 +1,16 @@
 import React, { Component } from "react";
 import { checkToken, removeAuthToken } from "../helpers";
 import { connect } from "react-redux";
-import { setErrorStateToStore } from "../helpers";
+import { setAuthStateToStore, setLoadSnackToStore } from "../helpers";
 
 export default ProtectedComponent => {
   class Protected extends Component {
     componentDidMount() {
       this.checkAuth();
     }
-    
+
     componentDidUpdate() {
-        this.checkAuth();
+      this.checkAuth();
     }
 
     checkAuth() {
@@ -20,13 +20,15 @@ export default ProtectedComponent => {
         removeAuthToken();
 
         let error = {};
-        if(isAuth && !checkToken()){
+        if (isAuth && !checkToken()) {
           error = {
             open: true,
             message: "Your authentication is expired. Please login again."
-          }
+          };
+          setLoadSnackToStore(error);
         }
-        setErrorStateToStore(error);
+
+        setAuthStateToStore(false);
 
         const { history } = this.props;
         history.push("/login");
@@ -42,11 +44,14 @@ export default ProtectedComponent => {
 
       return <ProtectedComponent {...this.props} />;
     }
-  };
+  }
 
   const mapStateToProps = state => ({
     isAuth: state.isAuth
   });
 
-  return connect(mapStateToProps, {  })(Protected);
+  return connect(
+    mapStateToProps,
+    {}
+  )(Protected);
 };

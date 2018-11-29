@@ -1,7 +1,5 @@
 import axios from "axios";
-import {
-  setLoadingStateToStore
-} from "../helpers";
+import { setLoadingStateToStore } from "../helpers";
 
 const auth = axios.create({
   baseURL: process.env.REACT_APP_AUTHURL

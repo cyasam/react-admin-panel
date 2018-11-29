@@ -2,7 +2,8 @@ import axios from "axios";
 import {
   getAuthToken,
   removeAuthToken,
-  setErrorStateToStore,
+  setAuthStateToStore,
+  setLoadSnackToStore,
   setLoadingStateToStore
 } from "../helpers";
 
@@ -29,16 +30,18 @@ api.interceptors.response.use(
     return response;
   },
   error => {
-    if (error.response && (error.response.status > 400)) {
+    if (error.response && error.response.status > 400) {
       removeAuthToken();
 
       const err = {
         open: true,
         message: error.response.data.message
-      }
-      setErrorStateToStore(err)
+      };
+
+      setAuthStateToStore(false);
+      setLoadSnackToStore(err);
     }
-    
+
     setLoadingStateToStore(false);
     return Promise.reject(error);
   }
