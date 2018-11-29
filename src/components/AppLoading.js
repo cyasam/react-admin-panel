@@ -8,7 +8,7 @@ class AppLoading extends Component {
   }
 
   componentDidMount() {
-    this.timer = setInterval(this.progress, 500);
+    this.timer = setInterval(this.progress, 10);
   }
 
   componentWillUnmount() {
@@ -20,10 +20,8 @@ class AppLoading extends Component {
     const { loading } = this.props;
     
     if (!loading || completed === 100) {
-      setTimeout(() => {
         this.setState({ completed: 0 });
         clearInterval(this.timer);
-      }, 1000)
     } else {
       const diff = Math.random() * 10;
       this.setState({ completed: Math.min(completed + diff, 100) });
@@ -32,15 +30,12 @@ class AppLoading extends Component {
 
   render() {
     const { completed } = this.state;
-    const { loading } = this.props;
     return (
       <Fragment>
-        {(loading || completed !== 0) && <LinearProgress color="secondary" variant="determinate" value={completed} /> }
+        <LinearProgress color="secondary" variant="determinate" value={completed} />
       </Fragment>
     );
   }
 }
-
-
 
 export default AppLoading;

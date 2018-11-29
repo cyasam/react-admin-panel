@@ -11,15 +11,11 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case 'LOAD_SNACKBAR':
-      return { ...state,
-        ...action.payload
-      };
-    case 'CLOSE_SNACKBAR':
-      return { ...state,
-        ...action.payload
-      };
+    case "LOAD_SNACKBAR":
+      return { ...state, ...action.payload };
+    case "CLOSE_SNACKBAR":
+      return { ...state, ...action.payload };
     default:
       return state;
   }
-}
+};

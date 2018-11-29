@@ -15,7 +15,7 @@ import IconButton from "@material-ui/core/IconButton";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 
-import { setLoading } from "../actions";
+import { setLoading, loadSnackbar } from "../actions";
 
 const styles = theme => ({
   root: {
@@ -46,6 +46,27 @@ class Posts extends Component {
       });
   }
 
+  onDeletePost = (id) => () => {
+    apiReq
+      .delete(`/posts/${id}`)
+      .then(response => {
+        const { status } = response;
+
+        if (status === 200) {
+          const allPosts = this.state.posts;
+          const posts = allPosts.filter(post => post.id !== id);
+
+          this.setState({ posts });
+
+          const { loadSnackbar } = this.props;
+          loadSnackbar({
+            open: true,
+            message: "Post deleted."
+          })
+        }
+      });
+  }
+
   render() {
     const { posts } = this.state;
     const { loading, classes } = this.props;
@@ -56,7 +77,7 @@ class Posts extends Component {
 
     return (
       <Fragment>
-        <Typography component="h2" variant="h3" gutterBottom>
+        <Typography component="h2" variant="h4" gutterBottom>
           Posts
         </Typography>
         <Paper className={classes.root}>
@@ -74,7 +95,7 @@ class Posts extends Component {
                     <EditIcon fontSize="small" />
                   </IconButton>
 
-                  <IconButton aria-label="Delete">
+                  <IconButton onClick={this.onDeletePost(post.id)} aria-label="Delete">
                     <DeleteIcon fontSize="small" />
                   </IconButton>
                 </ListItemSecondaryAction>
@@ -93,5 +114,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { setLoading }
+  { setLoading, loadSnackbar }
 )(withStyles(styles)(Posts));

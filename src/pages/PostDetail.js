@@ -42,6 +42,27 @@ class PostDetail extends Component {
       });
   }
 
+  onDeletePost = (id) => () => {
+    apiReq
+      .delete(`/users/${id}`)
+      .then(response => {
+        const { status } = response;
+
+        if (status === 200) {
+          const allUsers = this.state.users;
+          const users = allUsers.filter(user => user.id !== id);
+
+          this.setState({ users });
+
+          const { loadSnackbar } = this.props;
+          loadSnackbar({
+            open: true,
+            message: "User deleted."
+          })
+        }
+      });
+  }
+
   render() {
     const { post } = this.state;
     const { classes } = this.props;
