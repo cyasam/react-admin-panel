@@ -30,17 +30,20 @@ api.interceptors.response.use(
     return response;
   },
   error => {
-    if (error.response && error.response.status > 400) {
+    const err = {
+      open: true,
+      message: error.message
+    };
+
+    if (error.response && error.response.status === 401) {
       removeAuthToken();
 
-      const err = {
-        open: true,
-        message: error.response.data.message
-      };
+      err.message = error.response.data.message;
 
       setAuthStateToStore(false);
-      setLoadSnackToStore(err);
     }
+
+    setLoadSnackToStore(err);
 
     setLoadingStateToStore(false);
     return Promise.reject(error);

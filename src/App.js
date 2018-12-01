@@ -15,7 +15,7 @@ import Header from "./components/Header";
 import Menu from "./components/Menu";
 
 import Protected from "./components/Protected";
-import { Home, Posts, PostDetail, Login, Users, UsersDetail } from "./Routes";
+import { Home, Posts, PostEdit, Login, Users, UserEdit } from "./Routes";
 
 import "./App.scss";
 
@@ -46,9 +46,9 @@ class App extends Component {
               <Switch>
                 <Route exact path="/" component={Protected(Home)} />
                 <Route path="/posts" component={Protected(Posts)} />
-                <Route path="/post/:id" component={Protected(PostDetail)} />
+                <Route path="/post/:id" component={Protected(PostEdit)} />
                 <Route path="/users" component={Protected(Users)} />
-                <Route path="/user/:id" component={Protected(UsersDetail)} />
+                <Route path="/user/:id" component={Protected(UserEdit)} />
                 <Route path="/login" component={Login} />
                 <Redirect to="/" />
               </Switch>

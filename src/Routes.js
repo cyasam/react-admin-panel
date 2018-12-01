@@ -11,8 +11,8 @@ export const Posts = Loadable({
   loading: Loading
 })
 
-export const PostDetail = Loadable({
-  loader: () => import('./pages/PostDetail'),
+export const PostEdit = Loadable({
+  loader: () => import('./pages/PostEdit'),
   loading: Loading
 })
 
@@ -21,8 +21,8 @@ export const Users = Loadable({
   loading: Loading
 })
 
-export const UsersDetail = Loadable({
-  loader: () => import('./pages/UsersDetail'),
+export const UserEdit = Loadable({
+  loader: () => import('./pages/UserEdit'),
   loading: Loading
 })
 

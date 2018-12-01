@@ -15,6 +15,8 @@ import IconButton from "@material-ui/core/IconButton";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 
+import AlertDialog from "../components/AlertDialog";
+
 import { setLoading, loadSnackbar } from "../actions";
 
 const styles = theme => ({
@@ -23,14 +25,21 @@ const styles = theme => ({
   },
   postTitle: {
     color: theme.palette.text.primary,
-    textTransform: "capitalize",
     textDecoration: "none"
   }
 });
 
 class Posts extends Component {
   state = {
-    posts: []
+    posts: [],
+    deleteDialog: {
+      item: [],
+      open: false,
+      title: "Delete Post",
+      text: "Are you sure to delete the post?",
+      cancelText: "Cancel",
+      confirmText: "Delete Post"
+    }
   };
   componentDidMount() {
     this.props.setLoading(true);
@@ -46,7 +55,36 @@ class Posts extends Component {
       });
   }
 
-  onDeletePost = (id) => () => {
+  clickDeletePost = (item) => () => {
+    this.setState({
+      deleteDialog: {
+        ...this.state.deleteDialog,
+        item,
+        open: true
+      }
+    });
+  }
+
+  onCloseDeletePostDialog = () => {
+    this.setState({
+      deleteDialog: {
+        ...this.state.deleteDialog,
+        item: [],
+        open: false
+      }
+    });
+  }
+
+  onConfirmDeletePost = () => {
+    const {
+      deleteDialog: {
+        item
+      }
+    } = this.state;
+    this.onDeletePost(item);
+  }
+
+  onDeletePost = ({id, title}) => {
     apiReq
       .delete(`/posts/${id}`)
       .then(response => {
@@ -57,6 +95,7 @@ class Posts extends Component {
           const posts = allPosts.filter(post => post.id !== id);
 
           this.setState({ posts });
+          this.onCloseDeletePostDialog();
 
           const { loadSnackbar } = this.props;
           loadSnackbar({
@@ -64,11 +103,17 @@ class Posts extends Component {
             message: "Post deleted."
           })
         }
+      }).catch(() => {
+        this.onCloseDeletePostDialog();
       });
   }
 
+  createLink = id => {
+    return `/post/${id}`;
+  }
+
   render() {
-    const { posts } = this.state;
+    const { posts, deleteDialog } = this.state;
     const { loading, classes } = this.props;
 
     if (loading || !posts) {
@@ -85,17 +130,17 @@ class Posts extends Component {
             {posts.map(post => (
               <ListItem key={post.id}>
                 <ListItemText>
-                  <Link className={classes.postTitle} to={`/post/${post.id}`}>
+                  <Link className={classes.postTitle} to={this.createLink(post.id)}>
                     {post.title}
                   </Link>
                 </ListItemText>
 
                 <ListItemSecondaryAction>
-                  <IconButton aria-label="Edit">
+                  <IconButton component={Link} to={this.createLink(post.id)} aria-label="Edit">
                     <EditIcon fontSize="small" />
                   </IconButton>
 
-                  <IconButton onClick={this.onDeletePost(post.id)} aria-label="Delete">
+                  <IconButton onClick={this.clickDeletePost(post)} aria-label="Delete">
                     <DeleteIcon fontSize="small" />
                   </IconButton>
                 </ListItemSecondaryAction>
@@ -103,6 +148,15 @@ class Posts extends Component {
             ))}
           </List>
         </Paper>
+        <AlertDialog
+          open={deleteDialog.open}
+          title={deleteDialog.title}
+          text={deleteDialog.text}
+          cancelText={deleteDialog.cancelText}
+          confirmText={deleteDialog.confirmText}
+          onCancel={this.onCloseDeletePostDialog}
+          onConfirm={this.onConfirmDeletePost}
+        />
       </Fragment>
     );
   }

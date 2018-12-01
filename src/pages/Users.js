@@ -15,6 +15,8 @@ import IconButton from "@material-ui/core/IconButton";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 
+import AlertDialog from "../components/AlertDialog";
+
 import { setLoading, loadSnackbar } from "../actions";
 
 const styles = theme => ({
@@ -23,15 +25,23 @@ const styles = theme => ({
   },
   name: {
     color: theme.palette.text.primary,
-    textTransform: "capitalize",
     textDecoration: "none"
   }
 });
 
 class Users extends Component {
   state = {
-    users: []
+    users: [],
+    deleteDialog: {
+      item: [],
+      open: false,
+      title: "Delete User",
+      text: "Are you sure to delete the user?",
+      cancelText: "Cancel",
+      confirmText: "Delete User"
+    }
   };
+
   componentDidMount() {
     this.props.setLoading(true);
 
@@ -44,6 +54,35 @@ class Users extends Component {
           this.setState({ users: data });
         }
       });
+  }
+
+  clickDeletePost = (item) => () => {
+    this.setState({
+      deleteDialog: {
+        ...this.state.deleteDialog,
+        item,
+        open: true
+      }
+    });
+  }
+
+  onCloseDeletePostDialog = () => {
+    this.setState({
+      deleteDialog: {
+        ...this.state.deleteDialog,
+        item: [],
+        open: false
+      }
+    });
+  }
+
+  onConfirmDeletePost = () => {
+    const {
+      deleteDialog: {
+        item
+      }
+    } = this.state;
+    this.onDeleteUser(item);
   }
 
   onDeleteUser = (id) => () => {
@@ -67,8 +106,12 @@ class Users extends Component {
       });
   }
 
+  createLink = id => {
+    return `/user/${id}`;
+  }
+
   render() {
-    const { users } = this.state;
+    const { users, deleteDialog } = this.state;
     const { loading, classes } = this.props;
 
     if (loading || !users) {
@@ -85,17 +128,17 @@ class Users extends Component {
             {users.map(user => (
               <ListItem key={user.id}>
                 <ListItemText>
-                  <Link className={classes.name} to={`/user/${user.id}`}>
+                  <Link className={classes.name} to={this.createLink(user.id)}>
                     {user.name}
                   </Link>
                 </ListItemText>
 
                 <ListItemSecondaryAction>
-                  <IconButton aria-label="Edit">
+                  <IconButton component={Link} to={this.createLink(user.id)} aria-label="Edit">
                     <EditIcon fontSize="small" />
                   </IconButton>
 
-                  <IconButton onClick={this.onDeleteUser(user.id)} aria-label="Delete">
+                  <IconButton onClick={this.clickDeletePost(user)} aria-label="Delete">
                     <DeleteIcon fontSize="small" />
                   </IconButton>
                 </ListItemSecondaryAction>
@@ -103,6 +146,15 @@ class Users extends Component {
             ))}
           </List>
         </Paper>
+        <AlertDialog
+          open={deleteDialog.open}
+          title={deleteDialog.title}
+          text={deleteDialog.text}
+          cancelText={deleteDialog.cancelText}
+          confirmText={deleteDialog.confirmText}
+          onCancel={this.onCloseDeletePostDialog}
+          onConfirm={this.onConfirmDeletePost}
+        />
       </Fragment>
     );
   }
