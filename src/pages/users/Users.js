@@ -82,7 +82,7 @@ class Users extends Component {
     this.onDeleteUser(item);
   };
 
-  onDeleteUser = id => () => {
+  onDeleteUser = ({ id }) => {
     apiReq.delete(`/users/${id}`).then(response => {
       const { status } = response;
 
@@ -91,6 +91,7 @@ class Users extends Component {
         const users = allUsers.filter(user => user.id !== id);
 
         this.setState({ users });
+        this.onCloseDeleteUserDialog();
 
         const { loadSnackbar } = this.props;
         loadSnackbar({
