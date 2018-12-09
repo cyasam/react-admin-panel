@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { apiReq } from "../helpers";
+import { apiReq } from "../../helpers";
 
 import { withStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
@@ -15,42 +15,43 @@ import IconButton from "@material-ui/core/IconButton";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 
-import AlertDialog from "../components/AlertDialog";
+import AlertDialog from "../../components/AlertDialog";
 
-import { setLoading, loadSnackbar } from "../actions";
+import { setLoading, loadSnackbar } from "../../actions";
 
 const styles = theme => ({
   root: {
     width: "100%"
   },
-  postTitle: {
+  name: {
     color: theme.palette.text.primary,
     textDecoration: "none"
   }
 });
 
-class Posts extends Component {
+class Users extends Component {
   state = {
-    posts: [],
+    users: [],
     deleteDialog: {
       item: [],
       open: false,
-      title: "Delete Post",
-      text: "Are you sure to delete the post?",
+      title: "Delete User",
+      text: "Are you sure to delete the user?",
       cancelText: "Cancel",
-      confirmText: "Delete Post"
+      confirmText: "Delete User"
     }
   };
+
   componentDidMount() {
     this.props.setLoading(true);
 
     apiReq
-      .get("/posts")
+      .get("/users")
       .then(response => {
         const { data } = response;
 
         if (data) {
-          this.setState({ posts: data });
+          this.setState({ users: data });
         }
       });
   }
@@ -81,66 +82,63 @@ class Posts extends Component {
         item
       }
     } = this.state;
-    this.onDeletePost(item);
+    this.onDeleteUser(item);
   }
 
-  onDeletePost = ({id, title}) => {
+  onDeleteUser = (id) => () => {
     apiReq
-      .delete(`/posts/${id}`)
+      .delete(`/users/${id}`)
       .then(response => {
         const { status } = response;
 
         if (status === 200) {
-          const allPosts = this.state.posts;
-          const posts = allPosts.filter(post => post.id !== id);
+          const allUsers = this.state.users;
+          const users = allUsers.filter(user => user.id !== id);
 
-          this.setState({ posts });
-          this.onCloseDeletePostDialog();
+          this.setState({ users });
 
           const { loadSnackbar } = this.props;
           loadSnackbar({
             open: true,
-            message: "Post deleted."
+            message: "User deleted."
           })
         }
-      }).catch(() => {
-        this.onCloseDeletePostDialog();
       });
   }
 
-  createLink = id => {
-    return `/post/${id}`;
+  createEditLink = id => {
+    return `/users/edit/${id}`;
   }
 
   render() {
-    const { posts, deleteDialog } = this.state;
+    const { users, deleteDialog } = this.state;
     const { loading, classes } = this.props;
 
-    if (loading || !posts) {
+    if (loading || !users) {
       return null;
     }
 
     return (
       <Fragment>
         <Typography component="h2" variant="h4" gutterBottom>
-          Posts
+          Users
         </Typography>
         <Paper className={classes.root}>
           <List>
-            {posts.map(post => (
-              <ListItem key={post.id}>
+            {users.map(user => (
+              <ListItem key={user.id}>
                 <ListItemText>
-                  <Link className={classes.postTitle} to={this.createLink(post.id)}>
-                    {post.title}
+                  <Link className={classes.name} to={this.createEditLink(user.id)}>
+                    {user.name}
                   </Link>
                 </ListItemText>
 
                 <ListItemSecondaryAction>
-                  <IconButton component={Link} to={this.createLink(post.id)} aria-label="Edit">
+                  <IconButton component={Link} to={this.createEditLink(user.id)} aria-label="Edit">
                     <EditIcon fontSize="small" />
                   </IconButton>
 
-                  <IconButton onClick={this.clickDeletePost(post)} aria-label="Delete">
+                  <IconButton onClick={this.clickDeletePost(user)} aria-label="Delete">
                     <DeleteIcon fontSize="small" />
                   </IconButton>
                 </ListItemSecondaryAction>
@@ -169,4 +167,4 @@ const mapStateToProps = state => ({
 export default connect(
   mapStateToProps,
   { setLoading, loadSnackbar }
-)(withStyles(styles)(Posts));
+)(withStyles(styles)(Users));

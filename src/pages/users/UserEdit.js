@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { apiReq } from "../helpers";
+import { apiReq } from "../../helpers";
 
 import { withStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
@@ -8,7 +8,7 @@ import FormGroup from '@material-ui/core/FormGroup';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 
-import { setLoading, loadSnackbar } from "../actions";
+import { setLoading, loadSnackbar } from "../../actions";
 
 const styles = theme => ({
   root: {
@@ -16,17 +16,17 @@ const styles = theme => ({
     padding: theme.spacing.unit * 3
   },
   textField: {
-    width: "100%",
-    minWidth: 250
+    width: "30%",
+    minWidth: 250,
+    marginRight: theme.spacing.unit * 2
   },
   button: {
     marginTop: theme.spacing.unit,
   }
 });
-
-class PostEdit extends Component {
+class UserEdit extends Component {
   state = {
-    post: null
+    user: null
   };
 
   componentDidMount() {
@@ -39,20 +39,20 @@ class PostEdit extends Component {
     } = this.props;
 
     apiReq
-      .get(`/posts/${id}`)
+      .get(`/users/${id}`)
       .then(response => {
         const { data } = response;
 
         if (data) {
-          this.setState({ post: data });
+          this.setState({ user: data });
         }
       });
   }
 
   handleChange = name => event => {
     this.setState({
-      post: {
-        ...this.state.post,
+      user: {
+        ...this.state.user,
         [name]: event.target.value
       }
     })
@@ -61,24 +61,24 @@ class PostEdit extends Component {
   onSubmit = (event) => {
     event.preventDefault();
 
-    const { post } = this.state;
+    const { user } = this.state;
 
     apiReq
-      .put(`/posts/${post.id}`, post)
+      .put(`/users/${user.id}`, user)
       .then(() => {
         const { loadSnackbar } = this.props;
         loadSnackbar({
           open: true,
-          message: "Post updated."
+          message: "User updated."
         })
       })
   }
 
   render() {
-    const { post } = this.state;
+    const { user } = this.state;
     const { classes } = this.props;
 
-    if (!post) {
+    if (!user) {
       return null;
     }
 
@@ -89,16 +89,29 @@ class PostEdit extends Component {
             <TextField
               label="Name"
               className={classes.textField}
-              value={post.title}
-              onChange={this.handleChange("title")}
+              value={user.name}
+              onChange={this.handleChange("name")}
+              margin="normal"
             />
             <TextField
-              label="Body"
+              label="Username"
               className={classes.textField}
-              value={post.body}
-              multiline={true}
-              rowsMax={20}
-              onChange={this.handleChange("body")}
+              value={user.username}
+              onChange={this.handleChange("username")}
+              margin="normal"
+            />
+            <TextField
+              label="Email"
+              className={classes.textField}
+              value={user.email}
+              onChange={this.handleChange("email")}
+              margin="normal"
+            />
+            <TextField
+              label="Phone"
+              className={classes.textField}
+              value={user.phone}
+              onChange={this.handleChange("phone")}
               margin="normal"
             />
           </FormGroup>
@@ -115,4 +128,4 @@ class PostEdit extends Component {
 export default connect(
   null,
   { setLoading, loadSnackbar }
-)(withStyles(styles)(PostEdit));
+)(withStyles(styles)(UserEdit));

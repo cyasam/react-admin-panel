@@ -6,23 +6,13 @@ export const Home = Loadable({
   loading: Loading
 })
 
-export const Posts = Loadable({
-  loader: () => import('./pages/Posts'),
+export const PostsIndex = Loadable({
+  loader: () => import('./pages/posts/Index'),
   loading: Loading
 })
 
-export const PostEdit = Loadable({
-  loader: () => import('./pages/PostEdit'),
-  loading: Loading
-})
-
-export const Users = Loadable({
-  loader: () => import('./pages/Users'),
-  loading: Loading
-})
-
-export const UserEdit = Loadable({
-  loader: () => import('./pages/UserEdit'),
+export const UsersIndex = Loadable({
+  loader: () => import('./pages/users/Index'),
   loading: Loading
 })
 
