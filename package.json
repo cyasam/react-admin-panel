@@ -23,6 +23,7 @@
     "server:dev": "nodemon inspect server/index.js",
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "serve": "serve -s build -p 4000",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
