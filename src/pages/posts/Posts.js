@@ -1,32 +1,32 @@
-import React, { Component, Fragment } from "react";
-import { Link } from "react-router-dom";
-import { connect } from "react-redux";
-import { apiReq } from "../../helpers";
+import React, { Component, Fragment } from 'react';
+import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { apiReq } from '../../helpers';
 
-import { withStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
-import Paper from "@material-ui/core/Paper";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
-import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
+import { withStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import Paper from '@material-ui/core/Paper';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 
-import IconButton from "@material-ui/core/IconButton";
-import EditIcon from "@material-ui/icons/Edit";
-import DeleteIcon from "@material-ui/icons/Delete";
+import IconButton from '@material-ui/core/IconButton';
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
 
-import AlertDialog from "../../components/AlertDialog";
+import { AlertDialog } from '../../components';
 
-import { setLoading, loadSnackbar } from "../../actions";
+import { setLoading, loadSnackbar } from '../../actions';
 
 const styles = theme => ({
   root: {
-    width: "100%"
+    width: '100%',
   },
   postTitle: {
     color: theme.palette.text.primary,
-    textDecoration: "none"
-  }
+    textDecoration: 'none',
+  },
 });
 
 class Posts extends Component {
@@ -35,56 +35,52 @@ class Posts extends Component {
     deleteDialog: {
       item: [],
       open: false,
-      title: "Delete Post",
-      text: "Are you sure to delete the post?",
-      cancelText: "Cancel",
-      confirmText: "Delete Post"
-    }
+      title: 'Delete Post',
+      text: 'Are you sure to delete the post?',
+      cancelText: 'Cancel',
+      confirmText: 'Delete Post',
+    },
   };
   componentDidMount() {
     this.props.setLoading(true);
 
-    apiReq
-      .get("/posts")
-      .then(response => {
-        const { data } = response;
+    apiReq.get('/posts').then(response => {
+      const { data } = response;
 
-        if (data) {
-          this.setState({ posts: data });
-        }
-      });
+      if (data) {
+        this.setState({ posts: data });
+      }
+    });
   }
 
-  clickDeletePost = (item) => () => {
+  clickDeletePost = item => () => {
     this.setState({
       deleteDialog: {
         ...this.state.deleteDialog,
         item,
-        open: true
-      }
+        open: true,
+      },
     });
-  }
+  };
 
   onCloseDeletePostDialog = () => {
     this.setState({
       deleteDialog: {
         ...this.state.deleteDialog,
         item: [],
-        open: false
-      }
+        open: false,
+      },
     });
-  }
+  };
 
   onConfirmDeletePost = () => {
     const {
-      deleteDialog: {
-        item
-      }
+      deleteDialog: { item },
     } = this.state;
     this.onDeletePost(item);
-  }
+  };
 
-  onDeletePost = ({id, title}) => {
+  onDeletePost = ({ id, title }) => {
     apiReq
       .delete(`/posts/${id}`)
       .then(response => {
@@ -100,17 +96,18 @@ class Posts extends Component {
           const { loadSnackbar } = this.props;
           loadSnackbar({
             open: true,
-            message: "Post deleted."
-          })
+            message: 'Post deleted.',
+          });
         }
-      }).catch(() => {
+      })
+      .catch(() => {
         this.onCloseDeletePostDialog();
       });
-  }
+  };
 
   createEditLink = id => {
     return `/posts/edit/${id}`;
-  }
+  };
 
   render() {
     const { posts, deleteDialog } = this.state;
@@ -130,17 +127,27 @@ class Posts extends Component {
             {posts.map(post => (
               <ListItem key={post.id}>
                 <ListItemText>
-                  <Link className={classes.postTitle} to={this.createEditLink(post.id)}>
+                  <Link
+                    className={classes.postTitle}
+                    to={this.createEditLink(post.id)}
+                  >
                     {post.title}
                   </Link>
                 </ListItemText>
 
                 <ListItemSecondaryAction>
-                  <IconButton component={Link} to={this.createEditLink(post.id)} aria-label="Edit">
+                  <IconButton
+                    component={Link}
+                    to={this.createEditLink(post.id)}
+                    aria-label="Edit"
+                  >
                     <EditIcon fontSize="small" />
                   </IconButton>
 
-                  <IconButton onClick={this.clickDeletePost(post)} aria-label="Delete">
+                  <IconButton
+                    onClick={this.clickDeletePost(post)}
+                    aria-label="Delete"
+                  >
                     <DeleteIcon fontSize="small" />
                   </IconButton>
                 </ListItemSecondaryAction>
@@ -163,10 +170,10 @@ class Posts extends Component {
 }
 
 const mapStateToProps = state => ({
-  loading: state.loading
+  loading: state.loading,
 });
 
 export default connect(
   mapStateToProps,
-  { setLoading, loadSnackbar }
+  { setLoading, loadSnackbar },
 )(withStyles(styles)(Posts));

@@ -1,9 +1,8 @@
-import React, { Fragment } from "react";
-import { Link } from "react-router-dom";
-import { connect } from "react-redux";
+import React, { Fragment } from 'react';
+import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 
-import LogoutButton from "./LogoutButton";
-import AppLoading from "./AppLoading"
+import { AppLoading, LogoutButton } from '../../components';
 
 import { withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -14,15 +13,15 @@ import Typography from '@material-ui/core/Typography';
 
 const styles = theme => ({
   grow: {
-    flexGrow: 1
+    flexGrow: 1,
   },
   appBar: {
-    zIndex: theme.zIndex.drawer + 1
-  }
+    zIndex: theme.zIndex.drawer + 1,
+  },
 });
 
-const Header = (props) => {
-  const { isAuth, classes, loading } = props; 
+const Header = props => {
+  const { isAuth, classes, loading } = props;
 
   return (
     <Fragment>
@@ -33,20 +32,22 @@ const Header = (props) => {
             React Admin Panel
           </Typography>
           {!isAuth ? (
-            <Button color="inherit" component={Link} to="/login">Login</Button>
+            <Button color="inherit" component={Link} to="/login">
+              Login
+            </Button>
           ) : (
             <LogoutButton color="inherit">Logout</LogoutButton>
           )}
         </Toolbar>
-        { loading && <AppLoading loading={loading} /> }
+        {loading && <AppLoading loading={loading} />}
       </AppBar>
     </Fragment>
   );
 };
 
-const mapStateToProps = state =>  ({
+const mapStateToProps = state => ({
   isAuth: state.isAuth,
-  loading: state.loading
-})
+  loading: state.loading,
+});
 
 export default connect(mapStateToProps)(withStyles(styles)(Header));

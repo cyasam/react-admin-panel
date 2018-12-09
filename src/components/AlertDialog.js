@@ -8,12 +8,12 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 class AlertDialog extends Component {
   handleCancel = () => {
-    this.props.onCancel()
-  }
+    this.props.onCancel();
+  };
 
   handleConfirm = () => {
-    this.props.onConfirm()
-  }
+    this.props.onConfirm();
+  };
 
   render() {
     const { open, title, text, confirmText, cancelText } = this.props;

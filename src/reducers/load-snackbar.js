@@ -1,19 +1,19 @@
 const initialState = {
   anchorOrigin: {
-    vertical: "top",
-    horizontal: "center"
+    vertical: 'top',
+    horizontal: 'center',
   },
   open: false,
-  variant: "success",
+  variant: 'success',
   autoHideDuration: 3000,
-  message: ""
+  message: '',
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case "LOAD_SNACKBAR":
+    case 'LOAD_SNACKBAR':
       return { ...state, ...action.payload };
-    case "CLOSE_SNACKBAR":
+    case 'CLOSE_SNACKBAR':
       return { ...state, ...action.payload };
     default:
       return state;

@@ -1,14 +1,14 @@
-import axios from "axios";
+import axios from 'axios';
 import {
   getAuthToken,
   removeAuthToken,
   setAuthStateToStore,
   setLoadSnackToStore,
-  setLoadingStateToStore
-} from "../helpers";
+  setLoadingStateToStore,
+} from '../helpers';
 
 const api = axios.create({
-  baseURL: process.env.REACT_APP_APIURL
+  baseURL: process.env.REACT_APP_APIURL,
 });
 
 api.interceptors.request.use(
@@ -21,7 +21,7 @@ api.interceptors.request.use(
   },
   error => {
     return Promise.reject(error);
-  }
+  },
 );
 
 api.interceptors.response.use(
@@ -32,22 +32,23 @@ api.interceptors.response.use(
   error => {
     const err = {
       open: true,
-      message: error.message
+      message: error.message,
     };
 
-    if (error.response && error.response.status === 401) {
-      removeAuthToken();
+    if (error.response) {
+      if (error.response.status === 401) {
+        removeAuthToken();
 
-      err.message = error.response.data.message;
+        err.message = error.response.data.message;
 
-      setAuthStateToStore(false);
+        setAuthStateToStore(false);
+      }
     }
 
     setLoadSnackToStore(err);
-
     setLoadingStateToStore(false);
     return Promise.reject(error);
-  }
+  },
 );
 
 export const apiReq = api;

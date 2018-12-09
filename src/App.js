@@ -1,24 +1,19 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Redirect
-} from "react-router-dom";
-import { withStyles } from "@material-ui/core/styles";
-import SnackBar from "./components/SnackBar";
+  Redirect,
+} from 'react-router-dom';
+import { withStyles } from '@material-ui/core/styles';
 
-import { Provider } from "react-redux";
-import store from "./store";
+import { Provider } from 'react-redux';
+import store from './store';
 
-import Header from "./components/Header";
-import Menu from "./components/Menu";
+import { Home, PostsIndex, Login, UsersIndex } from './Routes';
+import { Header, Menu, Protected, SnackBar } from './components';
 
-import Protected from "./components/Protected";
-import { Home, PostsIndex, Login, UsersIndex } from "./Routes";
-
-import "./App.scss";
-
+import './App.scss';
 
 const style = theme => ({
   root: {
@@ -28,7 +23,7 @@ const style = theme => ({
     flexGrow: 1,
     padding: theme.spacing.unit * 3,
   },
-  toolbar: theme.mixins.toolbar
+  toolbar: theme.mixins.toolbar,
 });
 
 class App extends Component {

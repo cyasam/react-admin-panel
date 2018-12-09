@@ -1,7 +1,7 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
-import { setLoading } from "../actions";
+import { setLoading } from '../actions';
 
 class Home extends Component {
   componentDidMount() {
@@ -17,4 +17,7 @@ class Home extends Component {
   }
 }
 
-export default connect(null, { setLoading })(Home);
+export default connect(
+  null,
+  { setLoading },
+)(Home);

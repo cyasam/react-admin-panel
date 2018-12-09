@@ -1,6 +1,6 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { connect } from "react-redux";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 import { withStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
@@ -21,12 +21,12 @@ const styles = theme => ({
   toolbar: theme.mixins.toolbar,
 });
 
-const Menu = (props) => {
+const Menu = props => {
   const { isAuth, classes } = props;
 
-    if(!isAuth) {
-      return null;
-    }
+  if (!isAuth) {
+    return null;
+  }
 
   return (
     <Drawer
@@ -49,12 +49,12 @@ const Menu = (props) => {
         </ListItem>
       </List>
     </Drawer>
-  )
-}
+  );
+};
 
-const mapStateToProps = state =>  ({
+const mapStateToProps = state => ({
   isAuth: state.isAuth,
-  loading: state.loading
-})
+  loading: state.loading,
+});
 
 export default connect(mapStateToProps)(withStyles(styles)(Menu));

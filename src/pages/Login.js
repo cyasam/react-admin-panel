@@ -1,22 +1,22 @@
-import React, { Component } from "react";
-import { withRouter } from "react-router-dom";
-import { connect } from "react-redux";
-import { authReq } from "../helpers";
+import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { authReq } from '../helpers';
 
-import { setAuth, setLoading, loadSnackbar } from "../actions";
+import { setAuth, setLoading, loadSnackbar } from '../actions';
 
-import Button from "@material-ui/core/Button";
-import Grid from "@material-ui/core/Grid";
-import TextField from "@material-ui/core/TextField";
-import { closeSnackbar } from "../actions";
-import { setAuthToken } from "../helpers";
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
+import TextField from '@material-ui/core/TextField';
+import { closeSnackbar } from '../actions';
+import { setAuthToken } from '../helpers';
 
 class Login extends Component {
   state = {
     form: {
-      username: "",
-      password: ""
-    }
+      username: '',
+      password: '',
+    },
   };
 
   componentDidMount() {
@@ -29,8 +29,8 @@ class Login extends Component {
     this.setState({
       form: {
         ...form,
-        [name]: value
-      }
+        [name]: value,
+      },
     });
   };
 
@@ -46,7 +46,7 @@ class Login extends Component {
     closeSnackbar();
 
     authReq
-      .post("/login", form)
+      .post('/login', form)
       .then(response => {
         const { success, isAuth, message } = response.data;
 
@@ -54,21 +54,21 @@ class Login extends Component {
 
         if (success && isAuth) {
           const { history, setAuth } = this.props;
-          variant = "success";
+          variant = 'success';
 
           const { token } = response.data;
           setAuthToken(token);
           setAuth(isAuth);
-          history.push("/");
+          history.push('/');
         } else {
-          variant = "error";
+          variant = 'error';
         }
 
         const snackbarProps = {
           open: true,
           message,
           variant,
-          autoHideDuration
+          autoHideDuration,
         };
 
         loadSnackbar(snackbarProps);
@@ -79,9 +79,9 @@ class Login extends Component {
 
           loadSnackbar({
             open: true,
-            variant: "error",
+            variant: 'error',
             message: message,
-            autoHideDuration
+            autoHideDuration,
           });
         }
       });
@@ -98,9 +98,9 @@ class Login extends Component {
               <TextField
                 id="username"
                 label="Username"
-                onChange={this.onInputChange("username")}
+                onChange={this.onInputChange('username')}
                 margin="normal"
-                style={{ width: "100%" }}
+                style={{ width: '100%' }}
               />
             </div>
             <div className="row">
@@ -108,14 +108,14 @@ class Login extends Component {
                 id="password"
                 label="Password"
                 type="password"
-                onChange={this.onInputChange("password")}
+                onChange={this.onInputChange('password')}
                 margin="normal"
-                style={{ width: "100%" }}
+                style={{ width: '100%' }}
               />
             </div>
             <div className="row">
               <Button type="submit" disabled={loading} variant="contained">
-                {!loading ? "Login" : "Loading..."}
+                {!loading ? 'Login' : 'Loading...'}
               </Button>
             </div>
           </form>
@@ -127,5 +127,5 @@ class Login extends Component {
 
 export default connect(
   null,
-  { setAuth, setLoading, loadSnackbar, closeSnackbar }
+  { setAuth, setLoading, loadSnackbar, closeSnackbar },
 )(withRouter(Login));

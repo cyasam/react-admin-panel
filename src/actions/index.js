@@ -1,37 +1,37 @@
-export const setAuthDispatch = (isAuth) => ({
+export const setAuthDispatch = isAuth => ({
   type: 'APP_AUTH',
-  payload: isAuth
-})
+  payload: isAuth,
+});
 
-export const setAuth = (isAuth) => (dispatch) => {
-  dispatch(setAuthDispatch(isAuth))
-}
+export const setAuth = isAuth => dispatch => {
+  dispatch(setAuthDispatch(isAuth));
+};
 
-export const setLoadingDispatch = (loading) => ({
+export const setLoadingDispatch = loading => ({
   type: 'APP_LOADING',
-  payload: loading
-})
+  payload: loading,
+});
 
-export const setLoading = (loading) => (dispatch) => {
+export const setLoading = loading => dispatch => {
   dispatch(setLoadingDispatch(loading));
-}
+};
 
-export const loadSnackbarDispatch = (props) => ({
+export const loadSnackbarDispatch = props => ({
   type: 'LOAD_SNACKBAR',
-  payload: props
-})
+  payload: props,
+});
 
-export const loadSnackbar = (props) => (dispatch) => {
-  dispatch(loadSnackbarDispatch(props))
-}
+export const loadSnackbar = props => dispatch => {
+  dispatch(loadSnackbarDispatch(props));
+};
 
 export const closeSnackbarDispatch = () => ({
   type: 'CLOSE_SNACKBAR',
   payload: {
-    open: false
-  }
-})
+    open: false,
+  },
+});
 
-export const closeSnackbar = () => (dispatch) => {
-  dispatch(closeSnackbarDispatch())
-}
+export const closeSnackbar = () => dispatch => {
+  dispatch(closeSnackbarDispatch());
+};

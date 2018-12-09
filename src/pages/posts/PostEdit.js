@@ -1,32 +1,33 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { apiReq } from "../../helpers";
+import React, { Component, Fragment } from 'react';
+import { connect } from 'react-redux';
+import { apiReq } from '../../helpers';
 
-import { withStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
+import { withStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
 import FormGroup from '@material-ui/core/FormGroup';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
 
-import { setLoading, loadSnackbar } from "../../actions";
+import { setLoading, loadSnackbar } from '../../actions';
 
 const styles = theme => ({
   root: {
-    width: "100%",
-    padding: theme.spacing.unit * 3
+    width: '100%',
+    padding: theme.spacing.unit * 3,
   },
   textField: {
-    width: "100%",
-    minWidth: 250
+    width: '100%',
+    minWidth: 250,
   },
   button: {
     marginTop: theme.spacing.unit,
-  }
+  },
 });
 
 class PostEdit extends Component {
   state = {
-    post: null
+    post: null,
   };
 
   componentDidMount() {
@@ -34,31 +35,29 @@ class PostEdit extends Component {
 
     const {
       match: {
-        params: { id }
-      }
+        params: { id },
+      },
     } = this.props;
 
-    apiReq
-      .get(`/posts/${id}`)
-      .then(response => {
-        const { data } = response;
+    apiReq.get(`/posts/${id}`).then(response => {
+      const { data } = response;
 
-        if (data) {
-          this.setState({ post: data });
-        }
-      });
+      if (data) {
+        this.setState({ post: data });
+      }
+    });
   }
 
   handleChange = name => event => {
     this.setState({
       post: {
         ...this.state.post,
-        [name]: event.target.value
-      }
-    })
-  }
+        [name]: event.target.value,
+      },
+    });
+  };
 
-  onSubmit = (event) => {
+  onSubmit = event => {
     event.preventDefault();
 
     const { post } = this.state;
@@ -69,10 +68,14 @@ class PostEdit extends Component {
         const { loadSnackbar } = this.props;
         loadSnackbar({
           open: true,
-          message: "Post updated."
-        })
+          message: 'Post updated.',
+        });
       })
-  }
+      .catch(() => {
+        const { history } = this.props;
+        history.push('/posts');
+      });
+  };
 
   render() {
     const { post } = this.state;
@@ -83,36 +86,46 @@ class PostEdit extends Component {
     }
 
     return (
-      <Paper className={classes.root}>
-        <form onSubmit={this.onSubmit} noValidate autoComplete="off">
-          <FormGroup row={true}>
-            <TextField
-              label="Name"
-              className={classes.textField}
-              value={post.title}
-              onChange={this.handleChange("title")}
-            />
-            <TextField
-              label="Body"
-              className={classes.textField}
-              value={post.body}
-              multiline={true}
-              rowsMax={20}
-              onChange={this.handleChange("body")}
-              margin="normal"
-            />
-          </FormGroup>
-        
-          <Button type="submit" variant="contained" color="primary" className={classes.button}>
-            Save
-          </Button>
-        </form>
-      </Paper>
+      <Fragment>
+        <Typography component="h2" variant="h4" gutterBottom>
+          Posts
+        </Typography>
+        <Paper className={classes.root}>
+          <form onSubmit={this.onSubmit} noValidate autoComplete="off">
+            <FormGroup row={true}>
+              <TextField
+                label="Name"
+                className={classes.textField}
+                value={post.title}
+                onChange={this.handleChange('title')}
+              />
+              <TextField
+                label="Body"
+                className={classes.textField}
+                value={post.body}
+                multiline={true}
+                rowsMax={20}
+                onChange={this.handleChange('body')}
+                margin="normal"
+              />
+            </FormGroup>
+
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              className={classes.button}
+            >
+              Save
+            </Button>
+          </form>
+        </Paper>
+      </Fragment>
     );
   }
 }
 
 export default connect(
   null,
-  { setLoading, loadSnackbar }
+  { setLoading, loadSnackbar },
 )(withStyles(styles)(PostEdit));

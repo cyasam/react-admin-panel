@@ -1,32 +1,32 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { apiReq } from "../../helpers";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { apiReq } from '../../helpers';
 
-import { withStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
+import { withStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
 import FormGroup from '@material-ui/core/FormGroup';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 
-import { setLoading, loadSnackbar } from "../../actions";
+import { setLoading, loadSnackbar } from '../../actions';
 
 const styles = theme => ({
   root: {
-    width: "100%",
-    padding: theme.spacing.unit * 3
+    width: '100%',
+    padding: theme.spacing.unit * 3,
   },
   textField: {
-    width: "30%",
+    width: '30%',
     minWidth: 250,
-    marginRight: theme.spacing.unit * 2
+    marginRight: theme.spacing.unit * 2,
   },
   button: {
     marginTop: theme.spacing.unit,
-  }
+  },
 });
 class UserEdit extends Component {
   state = {
-    user: null
+    user: null,
   };
 
   componentDidMount() {
@@ -34,8 +34,8 @@ class UserEdit extends Component {
 
     const {
       match: {
-        params: { id }
-      }
+        params: { id },
+      },
     } = this.props;
 
     apiReq
@@ -46,6 +46,10 @@ class UserEdit extends Component {
         if (data) {
           this.setState({ user: data });
         }
+      })
+      .catch(() => {
+        const { history } = this.props;
+        history.push('/users');
       });
   }
 
@@ -53,26 +57,24 @@ class UserEdit extends Component {
     this.setState({
       user: {
         ...this.state.user,
-        [name]: event.target.value
-      }
-    })
-  }
+        [name]: event.target.value,
+      },
+    });
+  };
 
-  onSubmit = (event) => {
+  onSubmit = event => {
     event.preventDefault();
 
     const { user } = this.state;
 
-    apiReq
-      .put(`/users/${user.id}`, user)
-      .then(() => {
-        const { loadSnackbar } = this.props;
-        loadSnackbar({
-          open: true,
-          message: "User updated."
-        })
-      })
-  }
+    apiReq.put(`/users/${user.id}`, user).then(() => {
+      const { loadSnackbar } = this.props;
+      loadSnackbar({
+        open: true,
+        message: 'User updated.',
+      });
+    });
+  };
 
   render() {
     const { user } = this.state;
@@ -90,33 +92,38 @@ class UserEdit extends Component {
               label="Name"
               className={classes.textField}
               value={user.name}
-              onChange={this.handleChange("name")}
+              onChange={this.handleChange('name')}
               margin="normal"
             />
             <TextField
               label="Username"
               className={classes.textField}
               value={user.username}
-              onChange={this.handleChange("username")}
+              onChange={this.handleChange('username')}
               margin="normal"
             />
             <TextField
               label="Email"
               className={classes.textField}
               value={user.email}
-              onChange={this.handleChange("email")}
+              onChange={this.handleChange('email')}
               margin="normal"
             />
             <TextField
               label="Phone"
               className={classes.textField}
               value={user.phone}
-              onChange={this.handleChange("phone")}
+              onChange={this.handleChange('phone')}
               margin="normal"
             />
           </FormGroup>
-        
-          <Button type="submit" variant="contained" color="primary" className={classes.button}>
+
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            className={classes.button}
+          >
             Save
           </Button>
         </form>
@@ -127,5 +134,5 @@ class UserEdit extends Component {
 
 export default connect(
   null,
-  { setLoading, loadSnackbar }
+  { setLoading, loadSnackbar },
 )(withStyles(styles)(UserEdit));

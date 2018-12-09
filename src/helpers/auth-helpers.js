@@ -1,4 +1,4 @@
-const tokenName = "app-token";
+const tokenName = 'app-token';
 
 export const getAuthToken = () => {
   const token = localStorage.getItem(tokenName);
