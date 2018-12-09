@@ -14,6 +14,11 @@ export const UserEdit = Loadable({
   loading: Loading,
 });
 
+export const UserAdd = Loadable({
+  loader: () => import('./UserAdd'),
+  loading: Loading,
+});
+
 class PostsIndex extends PureComponent {
   render() {
     const { match } = this.props;
@@ -24,6 +29,7 @@ class PostsIndex extends PureComponent {
           path={`${match.path}/edit/:id`}
           component={Protected(UserEdit)}
         />
+        <Route path={`${match.path}/new`} component={Protected(UserAdd)} />
         <Redirect to={match.path} />
       </Switch>
     );

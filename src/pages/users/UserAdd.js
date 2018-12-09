@@ -28,36 +28,18 @@ const styles = theme => ({
   },
 });
 
-class UserEdit extends Component {
+class UserAdd extends Component {
   state = {
-    user: null,
+    user: {
+      name: '',
+      username: '',
+      email: '',
+      phone: '',
+    },
   };
 
   componentDidMount() {
-    this.props.setLoading(true);
-
-    const {
-      match: {
-        params: { id },
-      },
-    } = this.props;
-
-    apiReq
-      .get(`/users/${id}`)
-      .then(response => {
-        const { data } = response;
-
-        if (data) {
-          this.setState({ user: data });
-        }
-      })
-      .catch(error => {
-        if (error.response && error.response.status === 404) {
-          const { history } = this.props;
-          history.push('/users');
-          return;
-        }
-      });
+    this.props.setLoading(false);
   }
 
   handleChange = name => event => {
@@ -74,11 +56,11 @@ class UserEdit extends Component {
 
     const { user } = this.state;
 
-    apiReq.put(`/users/${user.id}`, user).then(() => {
+    apiReq.post(`/users`, user).then(() => {
       const { loadSnackbar } = this.props;
       loadSnackbar({
         open: true,
-        message: 'User updated.',
+        message: 'User added.',
       });
 
       const { history } = this.props;
@@ -90,15 +72,11 @@ class UserEdit extends Component {
     const { user } = this.state;
     const { classes } = this.props;
 
-    if (!user) {
-      return null;
-    }
-
     return (
       <Fragment>
         <PageHeader>
           <Typography component="h2" variant="h4">
-            Edit User
+            New User
           </Typography>
         </PageHeader>
         <Paper className={classes.root}>
@@ -152,4 +130,4 @@ class UserEdit extends Component {
 export default connect(
   null,
   { setLoading, loadSnackbar },
-)(withStyles(styles)(UserEdit));
+)(withStyles(styles)(UserAdd));

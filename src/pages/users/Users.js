@@ -10,12 +10,13 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import Button from '@material-ui/core/Button';
 
 import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 
-import { AlertDialog } from '../../components';
+import { PageHeader, AlertDialog } from '../../components';
 
 import { setLoading, loadSnackbar } from '../../actions';
 
@@ -54,7 +55,7 @@ class Users extends Component {
     });
   }
 
-  clickDeletePost = item => () => {
+  clickDeleteUser = item => () => {
     this.setState({
       deleteDialog: {
         ...this.state.deleteDialog,
@@ -64,7 +65,7 @@ class Users extends Component {
     });
   };
 
-  onCloseDeletePostDialog = () => {
+  onCloseDeleteUserDialog = () => {
     this.setState({
       deleteDialog: {
         ...this.state.deleteDialog,
@@ -74,7 +75,7 @@ class Users extends Component {
     });
   };
 
-  onConfirmDeletePost = () => {
+  onConfirmDeleteUser = () => {
     const {
       deleteDialog: { item },
     } = this.state;
@@ -114,9 +115,19 @@ class Users extends Component {
 
     return (
       <Fragment>
-        <Typography component="h2" variant="h4" gutterBottom>
-          Users
-        </Typography>
+        <PageHeader>
+          <Typography component="h2" variant="h4">
+            Users
+          </Typography>
+          <Button
+            component={Link}
+            to="/users/new"
+            variant="contained"
+            color="primary"
+          >
+            New user
+          </Button>
+        </PageHeader>
         <Paper className={classes.root}>
           <List>
             {users.map(user => (
@@ -140,7 +151,7 @@ class Users extends Component {
                   </IconButton>
 
                   <IconButton
-                    onClick={this.clickDeletePost(user)}
+                    onClick={this.clickDeleteUser(user)}
                     aria-label="Delete"
                   >
                     <DeleteIcon fontSize="small" />
@@ -156,8 +167,8 @@ class Users extends Component {
           text={deleteDialog.text}
           cancelText={deleteDialog.cancelText}
           confirmText={deleteDialog.confirmText}
-          onCancel={this.onCloseDeletePostDialog}
-          onConfirm={this.onConfirmDeletePost}
+          onCancel={this.onCloseDeleteUserDialog}
+          onConfirm={this.onConfirmDeleteUser}
         />
       </Fragment>
     );

@@ -19,51 +19,30 @@ const styles = theme => ({
     padding: theme.spacing.unit * 3,
   },
   textField: {
-    width: '30%',
+    width: '100%',
     minWidth: 250,
-    marginRight: theme.spacing.unit * 2,
   },
   button: {
     marginTop: theme.spacing.unit,
   },
 });
 
-class UserEdit extends Component {
+class PostAdd extends Component {
   state = {
-    user: null,
+    post: {
+      title: '',
+      body: '',
+    },
   };
 
   componentDidMount() {
-    this.props.setLoading(true);
-
-    const {
-      match: {
-        params: { id },
-      },
-    } = this.props;
-
-    apiReq
-      .get(`/users/${id}`)
-      .then(response => {
-        const { data } = response;
-
-        if (data) {
-          this.setState({ user: data });
-        }
-      })
-      .catch(error => {
-        if (error.response && error.response.status === 404) {
-          const { history } = this.props;
-          history.push('/users');
-          return;
-        }
-      });
+    this.props.setLoading(false);
   }
 
   handleChange = name => event => {
     this.setState({
-      user: {
-        ...this.state.user,
+      post: {
+        ...this.state.post,
         [name]: event.target.value,
       },
     });
@@ -72,33 +51,29 @@ class UserEdit extends Component {
   onSubmit = event => {
     event.preventDefault();
 
-    const { user } = this.state;
+    const { post } = this.state;
 
-    apiReq.put(`/users/${user.id}`, user).then(() => {
+    apiReq.post('/posts', post).then(() => {
       const { loadSnackbar } = this.props;
       loadSnackbar({
         open: true,
-        message: 'User updated.',
+        message: 'Post added.',
       });
 
       const { history } = this.props;
-      history.push('/users');
+      history.push('/posts');
     });
   };
 
   render() {
-    const { user } = this.state;
+    const { post } = this.state;
     const { classes } = this.props;
-
-    if (!user) {
-      return null;
-    }
 
     return (
       <Fragment>
         <PageHeader>
           <Typography component="h2" variant="h4">
-            Edit User
+            New Post
           </Typography>
         </PageHeader>
         <Paper className={classes.root}>
@@ -107,29 +82,16 @@ class UserEdit extends Component {
               <TextField
                 label="Name"
                 className={classes.textField}
-                value={user.name}
-                onChange={this.handleChange('name')}
-                margin="normal"
+                value={post.title}
+                onChange={this.handleChange('title')}
               />
               <TextField
-                label="Username"
+                label="Body"
                 className={classes.textField}
-                value={user.username}
-                onChange={this.handleChange('username')}
-                margin="normal"
-              />
-              <TextField
-                label="Email"
-                className={classes.textField}
-                value={user.email}
-                onChange={this.handleChange('email')}
-                margin="normal"
-              />
-              <TextField
-                label="Phone"
-                className={classes.textField}
-                value={user.phone}
-                onChange={this.handleChange('phone')}
+                value={post.body}
+                multiline={true}
+                rowsMax={20}
+                onChange={this.handleChange('body')}
                 margin="normal"
               />
             </FormGroup>
@@ -152,4 +114,4 @@ class UserEdit extends Component {
 export default connect(
   null,
   { setLoading, loadSnackbar },
-)(withStyles(styles)(UserEdit));
+)(withStyles(styles)(PostAdd));

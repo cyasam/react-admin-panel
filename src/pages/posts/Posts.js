@@ -10,12 +10,13 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import Button from '@material-ui/core/Button';
 
 import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 
-import { AlertDialog } from '../../components';
+import { PageHeader, AlertDialog } from '../../components';
 
 import { setLoading, loadSnackbar } from '../../actions';
 
@@ -119,9 +120,19 @@ class Posts extends Component {
 
     return (
       <Fragment>
-        <Typography component="h2" variant="h4" gutterBottom>
-          Posts
-        </Typography>
+        <PageHeader>
+          <Typography component="h2" variant="h4">
+            Posts
+          </Typography>
+          <Button
+            component={Link}
+            to="/posts/new"
+            variant="contained"
+            color="primary"
+          >
+            New Post
+          </Button>
+        </PageHeader>
         <Paper className={classes.root}>
           <List>
             {posts.map(post => (

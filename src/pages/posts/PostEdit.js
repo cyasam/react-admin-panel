@@ -9,6 +9,8 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
+import { PageHeader } from '../../components';
+
 import { setLoading, loadSnackbar } from '../../actions';
 
 const styles = theme => ({
@@ -39,13 +41,22 @@ class PostEdit extends Component {
       },
     } = this.props;
 
-    apiReq.get(`/posts/${id}`).then(response => {
-      const { data } = response;
+    apiReq
+      .get(`/posts/${id}`)
+      .then(response => {
+        const { data } = response;
 
-      if (data) {
-        this.setState({ post: data });
-      }
-    });
+        if (data) {
+          this.setState({ post: data });
+        }
+      })
+      .catch(error => {
+        if (error.response && error.response.status === 404) {
+          const { history } = this.props;
+          history.push('/posts');
+          return;
+        }
+      });
   }
 
   handleChange = name => event => {
@@ -62,19 +73,16 @@ class PostEdit extends Component {
 
     const { post } = this.state;
 
-    apiReq
-      .put(`/posts/${post.id}`, post)
-      .then(() => {
-        const { loadSnackbar } = this.props;
-        loadSnackbar({
-          open: true,
-          message: 'Post updated.',
-        });
-      })
-      .catch(() => {
-        const { history } = this.props;
-        history.push('/posts');
+    apiReq.put(`/posts/${post.id}`, post).then(() => {
+      const { loadSnackbar } = this.props;
+      loadSnackbar({
+        open: true,
+        message: 'Post updated.',
       });
+
+      const { history } = this.props;
+      history.push('/posts');
+    });
   };
 
   render() {
@@ -87,9 +95,11 @@ class PostEdit extends Component {
 
     return (
       <Fragment>
-        <Typography component="h2" variant="h4" gutterBottom>
-          Posts
-        </Typography>
+        <PageHeader>
+          <Typography component="h2" variant="h4">
+            Edit Post
+          </Typography>
+        </PageHeader>
         <Paper className={classes.root}>
           <form onSubmit={this.onSubmit} noValidate autoComplete="off">
             <FormGroup row={true}>

@@ -1,3 +1,4 @@
+export { default as PageHeader } from './PageHeader';
 export { default as AlertDialog } from './AlertDialog';
 export { default as AppLoading } from './AppLoading';
 export { default as Header } from './header/Header';
